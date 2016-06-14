@@ -1,0 +1,12 @@
+apertium-cat (1.0.0~r65787-1+wmf1) jessie-wikimedia; urgency=low
+
+  * Rebuilt for Jessie.
+
+ -- Kartik Mistry <kartik@debian.org>  Tue, 14 Jun 2016 11:36:15 +0530
+
+apertium-cat (1.0.0~r65787-1) unstable; urgency=low
+
+  [ Tino Didriksen ]
+  * Initial release (Closes: #815855)
+
+ -- Kartik Mistry <kartik@debian.org>  Thu, 25 Feb 2016 09:27:40 +0530
