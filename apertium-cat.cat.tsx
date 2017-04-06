@@ -259,6 +259,12 @@
       <tags-item tags="det.def.m.*"/>
     </sequence>
   </def-mult>
+  <def-mult name="PREPREL" closed="true">
+    <sequence>
+      <label-item label="PREP"/>
+      <tags-item tags="rel.m.*"/>
+    </sequence>
+  </def-mult>
  <!--  <def-mult name="PREPPOS" closed="true">
     <sequence>
       <label-item label="PREP"/>
