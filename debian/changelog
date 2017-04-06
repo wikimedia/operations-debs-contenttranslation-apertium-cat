@@ -1,3 +1,9 @@
+apertium-cat (2.0.0~r77286-1+wmf1) jessie-wikimedia; urgency=low
+
+  * Update to latest upstream release.
+
+ -- Kartik Mistry <kartik@debian.org>  Thu, 06 Apr 2017 12:36:51 +0530
+
 apertium-cat (1.0.0~r65787-1+wmf1) jessie-wikimedia; urgency=low
 
   * Rebuilt for Jessie.
