@@ -101,6 +101,7 @@ LIST Poder = "poder" ;
 LIST Podar = "podar" ;
 LIST Creure = "creure" ;
 LIST Creuar = "creuar" ;
+LIST Segons = "segons" ;
 
 SET Ser = ("ser") OR ("Ser") ;
 SET Estar = ("estar") OR ("Estar");
@@ -265,6 +266,9 @@ SUBSTITUTE:si_ja_2 ("sí") ("sí_ja") TARGET ("sí") IF (0 ("sí") OR ("Sí")) (
 	# sí comentó
 	# en sí fue
 
+SELECT:va1 Anar IF (0 ("anar") OR ("va")) (0 P3) (1 Inf) ;
+	# Boas va anar ("Boas" = paraula desconeguda, tria l'adjectiu "va")
+
 # "van" en balear pot ser vanar<vblex><pri><p1><sg>$ (el verb, però, és vanar-se)
 # desfem l'ambigüitat amb anar<vblex><pri><p3><pl>$
 SELECT:van1 Anar IF (0 ("vanar") OR ("anar")) (0 P1) (NOT -1 ("em")) ;
@@ -342,7 +346,7 @@ SELECT:s_na_1_fp N IF (-1 Det + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK NOT 0 NP)
 	# la ofensiva de pascua
 	# la política del gobierno (per error, es veu Det i no Prep)
 
-SELECT:n_a_eos_1 N IF (0 Noun_Adj_PP LINK NOT 0 Adv OR PP OR Ger OR Inf OR NP OR ("ser") OR ("sino")) (-1C Vblex) (NOT -1 PP OR ("hablar") OR VPred) (1 Barrera_Final_Estrict_SN) ;
+SELECT:n_a_eos_1 N IF (0 Noun_Adj_PP LINK NOT 0 Adv OR PP OR Ger OR Inf OR NP OR ("ser") OR ("sino")) (NOT 0 ("cap")) (-1C Vblex) (NOT -1 PP OR ("hablar") OR VPred) (1 Barrera_Final_Estrict_SN) ;
 	# detonar explosivos.
 	# nos vino impuesto.
 SELECT:n_a_eos_1b N IF (0 Noun_Adj_PP LINK NOT 0 Adv OR PP OR Ger OR Inf OR NP OR ("ser") OR ("sino")) (-1C Vblex) (NOT -1 PP OR ("hablar") OR VPred) (1 CnjCoo) (2 Barrera_Final_Estrict_SN) ;
@@ -601,3 +605,25 @@ REMOVE:r_na_9_fp_fp A OR PP IF (-1 Det + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 
 	# adj_pp: "un trípode pesado con miras"
 
 # REMOVE:r_na_20 A OR PP IF (-1 Barrera_Inicial_SN LINK NOT 0 N) (NOT -1 Limite_Barrera_Inicial_SN) (0 Noun_Adj_PP LINK 0 N OR NP) (1 Barrera_Final_SN) ;
+
+SELECT Prep IF (-1 >>>) (0 ("segons")) ;
+	# segons ell
+	# segons el xic
+
+SELECT N IF (-1 ("comte")) (0 ("duc")) ;
+	# comte-duc d'Olivares
+
+SELECT Prep IF (-1C N) (0 ("sobre")) (1 Det) ;
+	# diverses hipòtesis sobre l'aparició
+
+SELECT Vblex IF (-1C ("no")) (0 ("porta")) (1 ("cap")) ;
+SELECT Det IF (-2C ("no")) (-1 Vblex) (0 ("cap")) (1C N) ;
+	# no porta cap indicació
+
+SELECT Pron IF (-4 ("no")) (-3 ("en")) (-2 Vbmod) (-1 Inf) (0 ("cap")) ;
+	# no en pot portar cap
+SELECT N IF (-1 Det) (0 ("cap")) (1 PP OR A) ;
+	# un cap unit
+	# un cap blanc
+SELECT N IF (-1 ("com a")) (0 ("cap")) ;
+	# ha estat designat com a cap de les famílies
