@@ -1,3 +1,10 @@
+apertium-cat (2.3.0~r82237-1+wmf1) jessie-wikimedia; urgency=low
+
+  * New upstream release.
+  * Updated debian/copyright from upstream.
+
+ -- Kartik Mistry <kartik@debian.org>  Tue, 12 Sep 2017 10:11:47 +0530
+
 apertium-cat (2.2.0~r79715-1+wmf1) jessie-wikimedia; urgency=low
 
    * Update to latest upstream release.
