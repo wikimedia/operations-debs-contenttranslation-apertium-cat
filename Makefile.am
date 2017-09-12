@@ -2,8 +2,8 @@
 ## Makefile for apertium-cat
 ###############################################################################
 
-RELEASE=2.2
-VERSION=2.2.0
+RELEASE=2.3
+VERSION=2.3.0
 LANG1=cat
 BASENAME=apertium-$(LANG1)
 
@@ -89,6 +89,7 @@ EXTRA_DIST=$(BASENAME).$(LANG1).dix		\
 		$(BASENAME).$(LANG1).rlx	\
 		$(BASENAME).post-$(LANG1).dix	\
 		$(LANG1).prob			\
+		genvdix.py 			\
 		modes.xml
 
 ###############################################################################
