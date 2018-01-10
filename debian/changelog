@@ -1,3 +1,10 @@
+apertium-cat (2.3.1~r82994-1+wmf1) jessie-wikimedia; urgency=low
+
+  * New upstream release.
+  * Updated dependency on cg3.
+
+ -- Kartik Mistry <kartik@debian.org>  Wed, 10 Jan 2018 09:05:50 +0530
+
 apertium-cat (2.3.0~r82237-1+wmf1) jessie-wikimedia; urgency=low
 
   * New upstream release.
