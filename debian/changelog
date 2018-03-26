@@ -1,3 +1,12 @@
+apertium-cat (2.4.0~r84327-1+wmf1) jessie-wikimedia; urgency=low
+
+  * New upstream release.
+  * Updated dependencies.
+  * Updated copyright.
+  * Updated debian/watch file.
+
+ -- Kartik Mistry <kartik@debian.org>  Mon, 26 Mar 2018 12:38:58 +0530
+
 apertium-cat (2.3.1~r82994-1+wmf1) jessie-wikimedia; urgency=low
 
   * New upstream release.
