@@ -11,6 +11,7 @@ LIST <<< = <<< ;
 LIST N = (n) ;
 LIST NP = (np) ;
 LIST A = (adj) ;
+LIST Pos = (pos) ;
 LIST Det = (det) ;
 LIST PreDet = (predet) ;
 LIST Num = (num) ;
@@ -28,11 +29,17 @@ LIST CnjAdv = (cnjadv) ;
 LIST Rel = (rel) ;
 LIST Itg = (itg) ;
 LIST Interj = (ij) ;
+SET Lpar = (lpar) ;
+SET Rpar = (rpar) ;
 
 LIST unknown = ("\\*.*"r) ;
+LIST unknownMajIni = ("\\*[A-ZÀÁÈÉíÒÓÚÜÇ].*"r) ;
+LIST segles_num_romans = ("[IVX][IVX]*"r) ;
 
 SET CM = (cm) OR (lpar) OR (rpar) OR ("<;>") ;
 LIST Excl = "!" ;
+
+SET Verb = Vblex OR Vbmod OR Vbhaver OR Copula ;
 
 SET V = Vblex + Vbmod + Vbhaver + Copula ;
 SET Word = N + NP + A + Det + PreAdv + Adv + V + Pron + Prep + CnjCoo + CnjSub + CnjAdv + Rel + Interj ;
@@ -58,8 +65,13 @@ LIST Enc = (enc) ;
 
 LIST Masc = m mf ;
 LIST Fem = f mf ;
+# LIST Masc_strict = n ; no utilitzar: també agafa mf
+# LIST Fem_strict = f ; no utilitzar: també agafa mf
+LIST MF = mf ;
 LIST Sg = sg sp ;
 LIST Pl = pl sp ;
+LIST Sg_strict = sg ;
+LIST Pl_strict = pl ;
 SET MascSg = (m sg) OR (m sp) OR (mf sg) OR (mf sp) ;
 SET MascPl = (m pl) OR (m sp) OR (mf pl) OR (mf sp) ;
 SET FemSg = (f sg) OR (f sp) OR (mf sg) OR (mf sp) ;
@@ -74,10 +86,12 @@ SET Pers = (p1) OR (p2) OR (p3) ;
 SET Ref = (prn pro ref) ;
 SET Pro = (prn pro) ;
 SET Tn = (prn tn) ;
+SET Tn_nt = (prn tn nt) ;
 
 SET Ant = (np ant) ;
 SET Cog = (np cog) ;
 SET Ant_Cog = Ant OR Cog ;
+SET Top = (np top) OR (np loc) ;
 
 SET DetDef = (det def) ;
 SET DetInd = (det ind) ;
@@ -92,9 +106,17 @@ SET Adv_PreAdv = Adv OR PreAdv ;
 SET Verb = Vblex OR Vbmod OR Vbhaver OR Copula ;
 SET Verb_Prep = Verb OR Prep ;
 SET Cnj_Rel = CnjCoo OR CnjSub OR CnjAdv OR Rel ;
-SET Cnj_Rel_End = >>> OR CnjCoo OR CnjSub OR CnjAdv OR Rel ;
+SET Cnj_Rel_End = >>> OR CnjCoo OR CnjSub OR CnjAdv OR Rel OR Inf;
 
 SET Trencat = ("terç") OR ("quart") OR ("cinquè") OR ("quint") OR ("sisè") OR ("setè") OR ("vuitè") OR ("novè") ;
+
+SET Llocs = ("riu") OR ("mar") OR ("oceà") OR ("muntanya") OR ("serra") OR ("serralada") OR ("cordillera") OR ("carena")
+	OR ("carrer") OR ("parc") OR ("plaça") OR ("avinguda") OR ("ciutat") OR ("vila") OR ("poble") OR ("capital") ;
+SET Persones = ("pare") OR ("mare") OR ("avi") OR ("germà") OR ("fill") OR ("oncle") OR ("tia") OR ("sogre") OR ("cunyat")
+	OR ("marit") OR ("dona") OR ("muller") OR ("espòs") OR ("company") OR ("veí") OR ("cap") OR ("amic") OR ("conegut") ;
+#SET Persones2 = ("pare") ("mare") ("avi") ;
+SET Dignitat = ("president") OR ("governador") OR ("emperador") OR ("rei") OR ("príncep") OR ("comte") OR ("marquès") OR ("duc")
+	OR ("arxiduc") OR ("infant") OR ("bisbe") ;
 
 SET Barrera_Final_SN = <<< OR Prep OR Det OR CnjSub OR CnjAdv OR Verb OR Rel OR Pro ;	# Verb és perillós per la ambigüitat, però en general, prolífic
 SET Barrera_Final_Estrict_SN = <<< OR Prep OR Det OR CnjSub OR CnjAdv OR Rel OR Pro ;
@@ -115,11 +137,31 @@ LIST Seriar = "seriar" ;
 LIST Caldre = "caldre" ;
 LIST Calar = "calar" ;
 LIST Beure = "beure" ;
+LIST Veure = "veure" ;
+LIST Viure = "viure" ;
+LIST Seure = "seure" ;
+LIST Moure = "moure" ;
+LIST So = "so" ;
+LIST Son = "son" ;
+LIST Fi = "fi" ;
+LIST Fins = "fins" ;
+LIST Fer = "fer" ;
+LIST Faig = "faig" ;
 LIST VSer = "ser" ;
+LIST Pobla = "pobla" ;
+LIST Poble = "poble" ;
+LIST Turquesa = "turquesa" ;
+LIST Turques = "turquès" ;
+LIST Turques = "turquès" ;
+LIST Turques = "turquès" ;
+LIST Ponent = "ponent" ;
 
 SET Ser = ("ser") OR ("Ser") ;
 SET Estar = ("estar") OR ("Estar");
 SET Haver = ("haver") OR ("Haver") ;
+
+LIST Que = "que" ;
+LIST Deu = "deu" ;
 
 SET V_CI = ("telefonar") OR ("trucar") ;	# verbs darrere els quals no pot anar un CD, sinó un CI
 SET V_CD_CI = ("agafar") OR ("afegir") OR ("atorgar") OR ("atribuir")
@@ -139,12 +181,13 @@ LIST Li = "li" ;
 SET PreAdj = ("mal") OR ("Mal") ;
 
 # adjetivos ambiguos que se anteponen a menudo
-SET AdjPrefAmb = ("bajo") OR ("alto") OR ("joven") OR ("viejo") OR ("medio") OR ("dicho") OR ("menor") OR ("mayor") OR ("doble") OR ("triple") OR ("posible") OR ("cierto") ;
+SET AdjPrefAmb = ("gran") OR ("petit") OR ("nou") OR ("antic") OR ("menor") OR ("major") OR ("doble") OR ("triple") OR ("possible") OR ("suposat") OR ("presumpte") ;
 
-SET VerboSubj = ("querer") OR ("Querer") OR ("desear") OR ("Desear") OR ("proponer") OR ("Proponer") OR ("gustar") OR ("Gustar") OR ("placer") OR ("Placer") OR ("exigir") OR ("Exigir") OR ("reclamar") OR ("Reclamar") OR ("pedir") OR ("Pedir") OR ("esperar") OR ("Esperar") ;
+# verbs Vblex que típicament impliquen subjuntiu
+SET VerbSubj = ("voler") OR ("desitjar") OR ("proposar") OR ("agradar") OR ("plaure") OR ("exigir") OR ("reclamar") OR ("demanar") OR ("esperar") ;
 
-# verbos Vblex que típicamente tienen predicativo
-SET VPred = ("considerar") OR ("Considerar") OR ("creer") OR ("Creer") OR ("opinar") OR ("Opinar") OR ("sentir") OR ("Sentir") OR ("hallar") OR ("Hallar") OR ("permanecer") OR ("Permanecer") OR ("continuar") OR ("Continuar") OR ("mantener") OR ("Mantener") OR ("resultar") OR ("Resultar") OR ("volver") OR ("Volver") ;
+# verbs Vblex que típicament impliquen indicatiu
+SET VInd = ("considerar") OR ("creure") OR ("opinar") OR ("dir") OR ("sentir") OR ("trobar") OR ("continuar") OR ("mantenir") OR ("resultar") ;
 
 
 ###############################################################################
@@ -153,94 +196,137 @@ SET VPred = ("considerar") OR ("Considerar") OR ("creer") OR ("Creer") OR ("opin
 
 SECTION
 
-REMOVE:r_cog_1 Cog IF (-1 DetDef) (0 Cog) ;
-REMOVE:r_cog_2 Cog IF (-1 DetInd) (0 Cog) ;
-REMOVE:r_ant_1 Ant IF (-1 DetDef) (0 Ant) ;
-REMOVE:r_ant_2 Ant IF (-1 DetInd) (0 Ant) ;
+REMOVE Cog IF (-1 DetDef) (0 Cog) ;
+REMOVE Cog IF (-1 DetInd) (0 Cog) ;
+REMOVE Ant IF (-1 DetDef) (0 Ant) ;
+REMOVE Ant IF (-1 DetInd) (0 Ant) ;
 
-SELECT NP IF (0 NP) (NOT -1 >>>) (NOT 0 ("Sol")) ;
-SELECT NP IF (0 NP) (0 N OR A) (-1 >>>) (1C Verb) ;	# Pujol diu
-SELECT Cog IF (0 Cog) (0 Ant) (-1C Ant) ;
+SELECT Ant IF (0 Ant) (1C Ant) ;
+        # Rosa Maria
+SELECT Cog IF (0 Cog OR Ant) (-1C Ant) ;
+SELECT Ant_Cog IF (0 Cog OR Ant) (1C Cog) ;
+SELECT Top IF (-2 Ant) (-1 ("de")) (0 Ant OR Cog OR Top) ;
+	# Hiparc de Nicea
+SELECT Top IF (-2 ("concili") OR ("parlament") OR ("estatut") OR ("constitució") OR ("tractat") OR ("declaració"))
+	(-1 ("de")) (0 Ant OR Cog OR Top) ;
+	# concili de Nicea
+SELECT Top IF (-2 ("corona") OR ("regne") OR ("comtat") OR ("ducat")) (-1 ("de")) (0 Cog OR Top) ;
+	# regne de Castella
+SELECT Top IF (-2 Dignitat) (-1 ("de")) (0 Ant OR Cog OR Top) ;
+	# príncep de Viana
+SELECT Top IF (-2 ("anar") OR ("viatjar")) (-1 ("a")) (0 Ant OR Cog OR Top) ;
+REMOVE Top IF (NOT -2 ("anar") OR ("viatjar")) (-1 ("a")) (0C Ant OR Cog OR Top) ;
+SELECT Top IF (-3 ("anar") OR ("viatjar")) (-2 ("a")) (-1 Det + Def) (0 Ant OR Cog OR Top) ;
+REMOVE Top IF (NOT -3 ("anar") OR ("viatjar")) (-2 ("a")) (-1 Det + Def) (0C Ant OR Cog OR Top) ;
+SELECT Top IF (-2 NP) (-1 ("de")) (0 Ant OR Cog OR Top) ;
 
+SELECT NP IF (0 NP LINK NOT 0 Prep OR Pron OR Det OR Num) (-1 >>>)
+	(NOT 0 ("just") OR ("fort") OR ("bon") OR ("ben") OR ("fidel") OR ("<Van>")
+	OR ("català") OR ("aragonès") OR ("espanyol") OR ("castellà")) ;
+#SELECT NP IF (0 NP) (0 N OR A) (-1 >>>) (1C Verb) ;		# Pujol diu
+#SELECT NP IF (0 NP) (0 N OR A) (-1 >>>) (1 Adv) (2C Verb) ;	# Pujol no diu
 
-SELECT:este_2 Det IF (0 ("este") + $$MascSg) (-1 Verb_Prep) (1 A + $$MascSg) (2 N + $$MascSg) ;
-	# de este bonito estado
-SELECT:este_1 Det IF (0 ("este") + $$MascSg) (-1 Verb_Prep) (1 N + $$MascSg) ;
-	# de este estado
-SELECT:este_2 Det IF (0 ("Este") + $$MascSg) (-1 >>>) (1 A + $$MascSg) (2 N + $$MascSg) ;
-	# Este bonito estado
-SELECT:este_1 Det IF (0 ("Este") + $$MascSg) (-1 >>>) (1 N + $$MascSg) ;
-	# Este estado
+SELECT N IF (-1 ("<santes>")) (0 ("<creus>")) ;
+SELECT N IF (-1 ("<Santes>")) (0 ("<Creus>")) ;
+	# santes creus
+SELECT N IF (0 ("creure") OR ("creu")) (1 ("de")) ;
+	# creu de Sant Jordi
+
+SELECT N IF (0 ("sant")) (1 NP) ;
+
+SELECT NP IF (0 NP) (NOT -1 >>>) (NOT 0 ("I") OR ("Sol") OR ("Nadal") OR ("Parlament") OR ("Guerra") OR ("Civil") OR ("Reis")) ;
+	# Traiem paraules que, per una raó o altra, es posen en majúscules sense ser NP
+
+SELECT N IF (-1 ("<el>")) (0 ("<Sol>")) ;		# el Sol
+SELECT N IF (-1 ("<la>")) (0 ("<Guerra>")) ;		# la Guerra (Mundial, d'Independència, etc.)
+SELECT N IF (-2 ("<la>")) (-1 A) (0 ("<Guerra>")) ;	# la Gran Guerra
+SELECT A IF (-1 ("<Guerra>")) (0 ("<Civil>")) ;		# la Guerra (Mundial, d'Independència, etc.)
+SELECT A IF (-1 N + MascSg) (0 NP OR A) (0 ("català") OR ("aragonès") OR ("espanyol") OR ("castellà")) ;
+SELECT A IF (-2 N + MascSg) (-1 A + MascSg) (0 NP OR A) (0 ("català") OR ("aragonès") OR ("espanyol") OR ("castellà")) ;
+
+SELECT Ant IF (NOT -1 Det OR ("mar")) (0 ("Egeu")) ;
+SELECT Top IF (-1 Det OR ("mar")) (0 ("Egeu")) ;
+
+SELECT Rel (-1C N) (0 Que) (1 Verb + P3) ;
+	# la dona que estima les flors
+SELECT Rel (-2C N) (-1 A) (0 Que) (1 Verb + P3) ;
+	# la dona gran que estima les flors
+#REMOVE Rel (-2C Verb) (-1C Prep) (0 Rel OR Itg) ;	# s'ha d'estudiar millor
+	# sap de què parla
+
+SELECT Verb (-1 Rel OR CnjSub) (0C Verb OR N) (1C N) ;
+SELECT Verb (-1 Rel OR CnjSub) (0C Verb OR N) (1 Det) (2C N) ;
+SELECT Verb (-1 Rel OR CnjSub) (0C Verb OR N) (1 Det) (2 A) (3C N) ;
+SELECT Verb (-1 Rel OR CnjSub) (0C Verb OR N) (1 Det) (2A A) (3 N) ;
+	# la dona que estima les flors
+
+SELECT Vbhaver (-1 ("hi")) (0 Vbhaver) (NOT 1 PP) ;
 
 # Tio estas ligita al la (mis)difinoj de accionista__n, albañil__n, gilipollas__n kaj reh/én__n
-#SELECT:n_mf_1 Masc IF (0C N LINK NOT 0 Defensa) (-1C Vblex OR Prep OR ("com")) (NOT -1 PP) (1 <<< OR Prep) ;
+#SELECT Masc IF (0C N LINK NOT 0 Defensa) (-1C Vblex OR Prep OR ("com")) (NOT -1 PP) (1 <<< OR Prep) ;
 	## cogieron rehenes.
-#SELECT:n_mf_2 Masc IF (0C N LINK NOT 0 Defensa) (-1C Num) (-2C Vblex OR Prep OR ("com")) (NOT -2 PP) (1 <<< OR Prep) ;
+#SELECT Masc IF (0C N LINK NOT 0 Defensa) (-1C Num) (-2C Vblex OR Prep OR ("com")) (NOT -2 PP) (1 <<< OR Prep) ;
 	## cogieron tres rehenes.
 
 # se referirán, desde entonces, a los indígenas del Magreb como pueblos líbicos, aunque
-#REMOVE:r_verb_1 Vblex (0 Vblex + Pers) (*1C Vblex + Pers BARRIER Cnj_Rel) ;
+#REMOVE Vblex (0 Vblex + Pers) (*1C Vblex + Pers BARRIER Cnj_Rel) ;
 	# no funciona: quan va venir, ho van veure
-# SELECT:r_verb_2 Vblex (0 Vblex + Pers) (-1C Pro) ; No: podría recurrir a ellas para hacer
+# SELECT Vblex (0 Vblex + Pers) (-1C Pro) ; No: podría recurrir a ellas para hacer
 
-# preposiciones / verbos
-SELECT:pr_cnjadv_1 Prep (0 ("después de") OR ("Después de") OR ("antes de") OR ("Antes de") OR ("tras") OR ("Tras")) (1 Det OR Pron LINK NOT 0 Enc) ;
-SELECT:pr_cnjadv_2 Prep (0 ("después de") OR ("Después de") OR ("antes de") OR ("Antes de") OR ("tras") OR ("Tras")) (1C A) ;
-SELECT:pr_cnjadv_3 CnjAdv (0 ("después de") OR ("Después de") OR ("antes de") OR ("Antes de") OR ("tras") OR ("Tras")) (1C Inf OR Enc) ;
+SELECT CnjSub (0 ("que")) (-1C Inf OR Enc) ;
+SELECT CnjSub (0 ("que")) (-1C Vblex LINK NOT 0 PP) ;
+SELECT CnjSub (0 ("que")) (-2C Vblex LINK NOT 0 PP) (-1C Adv);
+SELECT CnjSub (0 ("que")) (-2C Vblex LINK NOT 0 PP) (-1 ("entonces")) ;
+SELECT CnjSub (0 ("que")) (-1C PP) (-2C ("haver") OR ("Haver") OR ("ser") OR ("Ser") OR ("estar") OR ("Estar")) ;
+SELECT CnjSub (0 ("que")) (-2 ("tan") OR ("Tan")) (-1 A OR Adv) ;
+SELECT CnjSub (0 ("que")) (-2 ("més") OR ("més")) (-1 A OR Adv) (NOT 1 Verb OR Pron) ;
+SELECT CnjSub (0 ("que")) (-2 ("menys") OR ("menys")) (-1 A OR Adv) (NOT 1 Verb OR Pron) ;
 
-SELECT:que_1 CnjSub (0 ("que")) (-1C Inf OR Enc) ;
-SELECT:que_2 CnjSub (0 ("que")) (-1C Vblex LINK NOT 0 PP) ;
-SELECT:que_3 CnjSub (0 ("que")) (-2C Vblex LINK NOT 0 PP) (-1C Adv);
-SELECT:que_3b CnjSub (0 ("que")) (-2C Vblex LINK NOT 0 PP) (-1 ("entonces")) ;
-SELECT:que_4 CnjSub (0 ("que")) (-1C PP) (-2C ("haver") OR ("Haver") OR ("ser") OR ("Ser") OR ("estar") OR ("Estar")) ;
-SELECT:que_5 CnjSub (0 ("que")) (-2 ("tan") OR ("Tan")) (-1 A OR Adv) ;
-SELECT:que_6 CnjSub (0 ("que")) (-2 ("més") OR ("més")) (-1 A OR Adv) (NOT 1 V OR Pron) ;
-SELECT:que_7 CnjSub (0 ("que")) (-2 ("menys") OR ("menys")) (-1 A OR Adv) (NOT 1 V OR Pron) ;
-
-REMOVE:r_adv Adv (0 Adv) (-1C N) (1C N) ;
+REMOVE Adv (0 Adv) (-1C N) (1C N) ;
 	# manifestantes bajo jurisdicción
 
-REMOVE:nom_verb1 N (-1C Pro) (0 N LINK 0 Verb) (1 ("que")) ;
-REMOVE:nom_verb2 N (NOT -2 Verb) (NOT -2 Prep) (-1C Pro) (0 N LINK 0 Verb) ;
-#REMOVE:nom_verb3 N (NOT *-1 Verb BARRIER <<< OR CnjSub OR CnjAdv OR Rel) (0 N LINK 0 Verb) (NOT *1 Verb BARRIER >>> OR CnjSub OR CnjAdv OR Rel);
-#SELECT:nom_verb3 V (NOT *-1 Verb BARRIER <<< OR CnjSub OR CnjAdv OR Rel) (0 Verb) (NOT *1 Verb BARRIER >>> OR CnjSub OR CnjAdv OR Rel);
+REMOVE N (-1C Pro) (0 N LINK 0 Verb) (1 ("que")) ;
+REMOVE N (NOT -2 Verb) (NOT -2 Prep) (-1C Pro) (0 N LINK 0 Verb) ;
+#REMOVE N (NOT *-1 Verb BARRIER <<< OR CnjSub OR CnjAdv OR Rel) (0 N LINK 0 Verb) (NOT *1 Verb BARRIER >>> OR CnjSub OR CnjAdv OR Rel);
+#SELECT V (NOT *-1 Verb BARRIER <<< OR CnjSub OR CnjAdv OR Rel) (0 Verb) (NOT *1 Verb BARRIER >>> OR CnjSub OR CnjAdv OR Rel);
 	# se estima que
 	# le cuenta que
 	# NO: que ayuda en muchos aspectos
 
-REMOVE:tant_com_1 A (0 ("tant") OR ("Tant")) (*1 ("com") BARRIER CnjSub) ;
-REMOVE:tant_com_2 Verb (-1* ("tant") OR ("Tant") BARRIER CnjSub) (0 ("com")) ;
+REMOVE A (0 ("tant") OR ("Tant")) (*1 ("com") BARRIER CnjSub) ;
+REMOVE Verb (-1* ("tant") OR ("Tant") BARRIER CnjSub) (0 ("com")) ;
 
-REMOVE:adj_adv_1 Adv (-1 Copula) (0 A LINK 0 Adv) (NOT 1 A) ;
-REMOVE:adj_adv_2 Adv (-1C N) (0 A LINK 0 Adv) (NOT 1 A) (NOT 1 Verb) (NOT 1 Prep) ;
-REMOVE:adj_adv_3 Adv (-1C A) (0 A LINK 0 Adv) (NOT 1 Verb) ;
-SELECT:adj_adv_4_ms Adv (-1C N + $$MascSg) (0 A LINK 0 Adv) (1C A + $$MascSg) ;
-SELECT:adj_adv_4_fs Adv (-1C N + $$FemSg) (0 A LINK 0 Adv) (1C A + $$FemSg) ;
-SELECT:adj_adv_4_mp Adv (-1C N + $$MascPl) (0 A LINK 0 Adv) (1C A + $$MascPl) ;
-SELECT:adj_adv_4_fp Adv (-1C N + $$FemPl) (0 A LINK 0 Adv) (1C A + $$FemPl) ;
-SELECT:adj_adv_4b_ms Adv (-1C N + $$MascSg) (0 ("poc")) (1 A + $$MascSg) ;
-SELECT:adj_adv_4b_fs Adv (-1C N + $$FemSg) (0 ("poc")) (1 A + $$FemSg) ;
-SELECT:adj_adv_4b_mp Adv (-1C N + $$MascPl) (0 ("poc")) (1 A + $$MascPl) ;
-SELECT:adj_adv_4b_fp Adv (-1C N + $$FemPl) (0 ("poc")) (1 A + $$FemPl) ;
-SELECT:adj_adv_5_ms A (-2C N + $$MascSg) (-1C Adv) (0 A + $$MascSg) (NOT 0 ("va")) ;
-SELECT:adj_adv_5_fs A (-2C N + $$FemSg) (-1C Adv) (0 A + $$FemSg) (NOT 0 ("va")) ;
-SELECT:adj_adv_5_mp A (-2C N + $$MascPl) (-1C Adv) (0 A + $$MascPl) (NOT 0 ("va")) ;
-SELECT:adj_adv_5_fp A (-2C N + $$FemPl) (-1C Adv) (0 A + $$FemPl) (NOT 0 ("va")) ;
+REMOVE Adv (-1 Copula) (0 A LINK 0 Adv) (NOT 1 A) ;
+REMOVE Adv (-1C N) (0 A LINK 0 Adv) (NOT 1 A) (NOT 1 Verb) (NOT 1 Prep) ;
+REMOVE Adv (-1C A) (0 A LINK 0 Adv) (NOT 1 Verb) (NOT 0 ("prou")) ;
+REMOVE A (-1C N + MascSg) (0 A LINK 0 Adv) (1C A + MascSg) ;
+REMOVE A (-1C N + FemSg) (0 A LINK 0 Adv) (1C A + FemSg) ;
+REMOVE A (-1C N + MascPl) (0 A LINK 0 Adv) (1C A + MascPl) ;
+REMOVE A (-1C N + FemPl) (0 A LINK 0 Adv) (1C A + FemPl) ;
+SELECT Adv (-1C N + MascSg) (0 ("poc")) (1 A + MascSg) ;
+SELECT Adv (-1C N + FemSg) (0 ("poc")) (1 A + FemSg) ;
+SELECT Adv (-1C N + MascPl) (0 ("poc")) (1 A + MascPl) ;
+SELECT Adv (-1C N + FemPl) (0 ("poc")) (1 A + FemPl) ;
+SELECT A (-2C N + MascSg) (-1C Adv) (0 A + MascSg) (NOT 0 ("va")) ;
+SELECT A (-2C N + FemSg) (-1C Adv) (0 A + FemSg) (NOT 0 ("va")) ;
+SELECT A (-2C N + MascPl) (-1C Adv) (0 A + MascPl) (NOT 0 ("va")) ;
+SELECT A (-2C N + FemPl) (-1C Adv) (0 A + FemPl) (NOT 0 ("va")) ;
 
-#REMOVE:np_a_ms A IF (0 NP LINK 0 (adj m sg)) (-1 Prep) (1C N) (NOT 1 MascSg) ;
-#REMOVE:np_a_fs A IF (0 NP LINK 0 (adj f sg)) (-1 Prep) (1C N) (NOT 1 FemSg) ;
-#REMOVE:np_a_mp A IF (0 NP LINK 0 (adj m pl)) (-1 Prep) (1C N) (NOT 1 MascPl) ;
-#REMOVE:np_a_fp A IF (0 NP LINK 0 (adj f pl)) (-1 Prep) (1C N) (NOT 1 FemPl) ;
+#REMOVE A IF (0 NP LINK 0 (adj m sg)) (-1 Prep) (1C N) (NOT 1 MascSg) ;
+#REMOVE A IF (0 NP LINK 0 (adj f sg)) (-1 Prep) (1C N) (NOT 1 FemSg) ;
+#REMOVE A IF (0 NP LINK 0 (adj m pl)) (-1 Prep) (1C N) (NOT 1 MascPl) ;
+#REMOVE A IF (0 NP LINK 0 (adj f pl)) (-1 Prep) (1C N) (NOT 1 FemPl) ;
 	# asignaba a Armenia territorios
 
 REMOVE Imp IF (NOT 1* Excl) ;
 
 # elección de subjuntivo después de "que"
-SELECT:subj1 PRS (*-1 ("que") OR ("Que") BARRIER (Cnj_Rel_End)) (*-1 VerboSubj) (0C Verb) (NOT 0 ("<poden>")) ;
-#REMOVE:subj2 PRS (*-1 >>> BARRIER CnjAdv OR CnjSub OR Rel) (NOT -1 ("no") OR ("No") OR ("nunca") OR ("Nunca")) (0C Verb) ;
-SELECT:subj3 PRS (*-1 ("ser# .*"r) LINK 1 ("que")) (0C Verb) (NOT 0 ("<poden>")) ;
-SELECT:subj4 PRS (*-1 ("ser") LINK 1 A LINK 1 ("que")) (0C Verb) (NOT 0 ("<poden>")) ;
-SELECT:subj5 PRS (*-1 ("ser") LINK 1 Adv_PreAdv LINK 1 A LINK 1 ("que")) (0C Verb) (NOT 0 ("<poden>")) ;
+SELECT PRS (*-1 Que BARRIER Cnj_Rel_End) (*-1 VerbSubj LINK NOT 1 Inf) (0C Verb) (NOT 0 ("<poden>")) ;
+	# Compte: quiero decirle que me parece muy bien
+#REMOVE PRS (*-1 >>> BARRIER CnjAdv OR CnjSub OR Rel) (NOT -1 ("no") OR ("No") OR ("nunca") OR ("Nunca")) (0C Verb) ;
+SELECT PRS (*-1 ("ser# .*"r) LINK 1 ("que")) (0C Verb) (NOT 0 ("<poden>")) ;
+SELECT PRS (*-1 ("ser") LINK 1 A LINK 1 ("que")) (0C Verb) (NOT 0 ("<poden>")) ;
+SELECT PRS (*-1 ("ser") LINK 1 Adv_PreAdv LINK 1 A LINK 1 ("que")) (0C Verb) (NOT 0 ("<poden>")) ;
 	# es común que la persona sienta la certeza
 	# es posible que vengas.
 	# es bueno que vengas
@@ -250,84 +336,167 @@ REMOVE PIS (0 ("<foren>")) (1 PP) ;
 	# que foren capturats
 
 #
-# reflexivo
-# (decido que todos los posesivos en 3a persona, si el verbo está en 3a persona, son reflexivos)
-#
-SUBSTITUTE:ref_1 ("suyo") ("suyo_ref") TARGET ("suyo") IF (0 ("suyo")) (*-1 (vblex p3) BARRIER >>> OR CnjSub OR CnjAdv OR Rel) ;
-
-#
 # comparaciones
 #
-#SELECT:tant_1 Adv IF (0 ("tant")) (1C N) (2 ("com")) ;
+#SELECT Adv IF (0 ("tant")) (1C N) (2 ("com")) ;
 
-SELECT:pp_1 PP IF (-1 ("haver") OR ("Haver")) (0 PP) ;
-SELECT:pp_2 PP IF (-1 ("ser") OR ("ser")) (0 PP) (*1 ("por") BARRIER (Cnj_Rel_End)) ;
+SELECT PP IF (-1 ("haver") OR ("Haver")) (0 PP) ;
+SELECT PP IF (-1 ("ser") OR ("ser")) (0 PP) (*1 ("por") BARRIER (Cnj_Rel_End)) ;
 
 # seguir, estar + ger
-SELECT:ger Ger IF (-1 ("estar") OR ("Estar") OR ("seguir") OR ("Seguir")) (0 Ger) ;
+SELECT Ger IF (-1 ("estar") OR ("Estar") OR ("seguir") OR ("Seguir")) (0 Ger) ;
 
 #
 # PALABRAS PARTICULARES
 #
 
-SELECT:estat_1 N IF (-1 Det + Masc) (0 ("estat") OR ("Estat")) ;
-SELECT:estat_2 PP IF (-1 Vbhaver) (0 ("estat")) (1 PP) ;
-SELECT:estat_3 N IF (-1 ("[a-záéíóúñ].*"r)) (0 ("Estat")) ;	# "Estat" (con mayúscula) va precedido de una palabra con minúscula inicial
+SELECT N IF (-1 Det + Masc) (0 ("estat") OR ("Estat")) ;
+SELECT PP IF (-1 Vbhaver) (0 ("estat")) (1 PP) ;
+SELECT N IF (-1 ("[a-záéíóúñ].*"r)) (0 ("Estat")) ;	# "Estat" (con mayúscula) va precedido de una palabra con minúscula inicial
+SELECT N IF (-1 ("ciutat")) (0 ("estat")) ;	# ciutat estat
 
-#SELECT:va1 Anar IF (0 ("anar") OR ("va")) (0 P3) (1 Inf) ;
-SELECT:va1 Anar IF (0 ("anar") OR ("va")) (0 P3) (1/* Inf) ;
+#SELECT Anar IF (0 ("anar") OR ("va")) (0 P3) (1 Inf) ;
+SELECT Anar IF (0 ("anar") OR ("va")) (0 P3) (1/* Inf) ;
 	# Boas va anar ("Boas" = paraula desconeguda, tria l'adjectiu "va")
 	# una data festiva alternativa va produir-se, entre altres coses (per alguna raó desconeguda, (1 Inf) no funciona amb cat-tagger)
-SELECT:va2 Anar IF (0 ("anar") OR ("va")) (0 P3) (1 Adv) ;
+SELECT Anar IF (0 ("anar") OR ("va")) (0 P3) (1 Adv) ;
 	# Va més ràpidament
-SELECT:va3 Anar IF (0 ("anar") OR ("va")) (0 P3) (1C PP) ;
+SELECT Anar IF (0 ("anar") OR ("va")) (0 P3) (1C PP) ;
 	# L'escultura del Renaixement a la Corona d'Aragó va lligada a la cultura humanista
 
-# "van" en balear pot ser vanar<vblex><pri><p1><sg>$ (el verb, però, és vanar-se)
-# desfem l'ambigüitat amb anar<vblex><pri><p3><pl>$
-SELECT:van1 Anar IF (0 ("vanar") OR ("anar")) (0 P1) (NOT -1 ("em")) ;
+# "van" en balear pot ser vanar<vblex><pri><p1><sg> (el verb, però, és vanar-se)
+# desfem l'ambigüitat amb anar<vblex><pri><p3><pl>
+SELECT Anar IF (0 ("vanar") OR ("anar")) (0 P1) (NOT -1 ("em")) ;
 	# si no va precedit per "em" triem "anar"
-SELECT:van2 Vanar IF (0 ("vanar") OR ("anar")) (0 P1) (-1 ("em")) ;
+SELECT Vanar IF (0 ("vanar") OR ("anar")) (0 P1) (-1 ("em")) ;
 	# si va precedit per "em" triem "vanar"
 
 # voler i volar (p.ex. volen)
-SELECT:voler0 Voler IF (0 ("voler") OR ("volar")) (1/* Inf) ;
-SELECT:voler1 Voler IF (0 ("voler") OR ("volar")) (1 Inf) ;
-SELECT:voler2 Volar IF (0 ("voler") OR ("volar")) (1 ("a") OR ("cap") OR ("cap a")) ;
-SELECT:voler3 Volar IF (0 ("voler") OR ("volar")) (1 Adv) (2 ("a") OR ("cap") OR ("cap a")) ;
-SELECT:voler4 Voler IF (0 ("voler") OR ("volar")) (1 ("que")) ;
-SELECT:voler5 Voler IF (0 ("voler") OR ("volar")) (1 Adv) (2 ("que")) ;
+SELECT Voler IF (0 ("voler") OR ("volar")) (1/* Inf) ;
+SELECT Voler IF (0 ("voler") OR ("volar")) (1 Inf) ;
+SELECT Volar IF (0 ("voler") OR ("volar")) (1 ("a") OR ("cap") OR ("cap a")) ;
+SELECT Volar IF (0 ("voler") OR ("volar")) (1 Adv) (2 ("a") OR ("cap") OR ("cap a")) ;
+SELECT Voler IF (0 ("voler") OR ("volar")) (1 ("que")) ;
+SELECT Voler IF (0 ("voler") OR ("volar")) (1 Adv) (2 ("que")) ;
 	# No volen pas que, volen sovint que
 
 # poder i podar (p.ex. poden)
-SELECT:poder0 Poder IF (0 ("poder") OR ("podar")) (1/* Inf) ;
-SELECT:poder1 Poder IF (0 ("poder") OR ("podar")) (1 Inf) ;
+SELECT Poder IF (0 ("poder") OR ("podar")) (1/* Inf) ;
+SELECT Poder IF (0 ("poder") OR ("podar")) (1 Inf) ;
 
 # creure i creuar (p.ex. creuen)
-SELECT:creure0 Creure IF (0 ("creure") OR ("creuar")) (1/* Inf) ;
-SELECT:creure1 Creure IF (0 ("creure") OR ("creuar")) (1 Inf) ;
-SELECT:creure2 Creure IF (0 ("creure") OR ("creuar")) (1 ("que")) ;
-SELECT:creure3 Creure IF (0 ("creure") OR ("creuar")) (1 Adv) (2 ("que")) ;
+SELECT Creure IF (0 ("creure") OR ("creuar")) (1/* Inf) ;
+SELECT Creure IF (0 ("creure") OR ("creuar")) (1 Inf) ;
+SELECT Creure IF (0 ("creure") OR ("creuar")) (1 ("que")) ;
+SELECT Creure IF (0 ("creure") OR ("creuar")) (1 Adv) (2 ("que")) ;
 	# No creuen pas que, creuen sovint que
-SELECT:creure4 Creuar IF (0 ("creure") OR ("creuar")) (1 ("en")) (2 N) (NOT 2 ("déu"));
-SELECT:creure5 Creure IF (0 ("creure") OR ("creuar")) (1 ("en")) ;
-SELECT:creure4b Creuar IF (0 ("creure") OR ("creuar")) (1 Adv) (2 ("en")) (3 N) (NOT 3 ("déu"));
-SELECT:creure5b Creure IF (0 ("creure") OR ("creuar")) (1 Adv) (2 ("en")) ;
+SELECT Creure IF (0 ("creure") OR ("creuar")) (1 ("a")) ;
+SELECT Creure IF (0 ("creure") OR ("creuar")) (1 Adv) (2 ("a")) ;
+SELECT Creure IF (0 ("creure") OR ("creuar")) (1 ("algú")) ;
+
+SELECT Creuar IF (0 ("creure") OR ("creuar")) (1 ("en")) (2 N) (NOT 2 ("déu"));
+SELECT Creure IF (0 ("creure") OR ("creuar")) (1 ("en")) ;
+SELECT Creuar IF (0 ("creure") OR ("creuar")) (1 Adv) (2 ("en")) (3 N) (NOT 3 ("déu"));
+SELECT Creure IF (0 ("creure") OR ("creuar")) (1 Adv) (2 ("en")) ;
+
+SELECT Creuar IF (0 ("creure") OR ("creuar")) (1 Top) ;
+SELECT Creuar IF (0 ("creure") OR ("creuar")) (1 Adv) (2 Top) ;
+SELECT Creuar IF (0 ("creure") OR ("creuar")) (1 Det) (2 Top) ;
+SELECT Creuar IF (0 ("creure") OR ("creuar")) (1 Adv) (2 Det) (3 Top) ;
+SELECT Creure IF (0 ("creure") OR ("creuar")) (1 Ant) (NOT 1 ("<Creus")) ;
+SELECT Creure IF (0 ("creure") OR ("creuar")) (1 Adv) (2 Ant) ;
+
+SELECT Creuar IF (0 ("creure") OR ("creuar")) (1 Det) (2 Llocs) ;
+SELECT Creuar IF (0 ("creure") OR ("creuar")) (1 Adv) (2 Det) (3 Llocs) ;
+SELECT Creure IF (0 ("creure") OR ("creuar")) (1 Det) (2 Persones) ;
+SELECT Creure IF (0 ("creure") OR ("creuar")) (1 Adv) (2 Det) (3 Persones) ;
 
 # ser i seriar (p.ex. seria)
-REMOVE:ser1 Seriar IF (0C ("ser") OR ("seriar")) (1 PP) ;
-REMOVE:ser2 Seriar IF (0C ("ser") OR ("seriar")) (1 A OR N) ;
-REMOVE:ser3 Seriar IF (0C ("ser") OR ("seriar")) (1 Adv OR PreAdv) (2 A OR N) ;
+REMOVE Seriar IF (0C ("ser") OR ("seriar")) (1 PP) ;
+REMOVE Seriar IF (0C ("ser") OR ("seriar")) (1 A OR N OR Det) ;
+REMOVE Seriar IF (0C ("ser") OR ("seriar")) (1 Adv OR PreAdv) (2 A OR N) ;
 
 # ser i estat (p.ex. estat)
 SELECT VSer IF (-1 Vbhaver) (0 ("ser") OR ("estar")) (1 PP) ;
+SELECT VSer IF (-1 Vbhaver) (0 ("<estat>")) (1 Det) ;
+	# han estat les de marxa atlètica
 
 # caldre i calar (p.ex. calen)
 SELECT Calar IF (-1 Pro) (0C ("caldre") OR ("calar")) ;
 REMOVE Calar IF (NOT -1 Pro) (0C ("caldre") OR ("calar")) ;
 
+# veure i viure (p.ex. viu)
+SELECT Viure IF (NOT -1 ("jo")) (0 ("<viu>")) ;
+
 # jo bec
 SELECT Beure IF (-1 ("jo")) (0 ("<bec>")) ;
+
+# jo moc
+SELECT Moure IF (-1 ("jo")) (0 ("<moc>")) ;
+
+# jo sec
+SELECT Seure IF (-1 ("jo")) (0 ("<sec>")) ;
+SELECT Seure IF (-1 >>>) (0 ("<Sec>")) ;
+
+SELECT Vblex IF (0 ("<sol>")) (1 Inf) ;
+	# L'agnòstic sol separar les posicions
+
+SELECT So IF (0 So OR Son + Pl) ;
+
+SELECT Fins IF (0 Fins OR Fi + Pl) (1 ("fer")) ;
+
+SELECT Pobla IF (0 Poble OR Pobla + Pl) (-1 Fem LINK NOT 0 MF) ;
+SELECT Pobla IF (0 Poble OR Pobla + Pl) (1 Fem LINK NOT 0 MF) ;
+SELECT Poble IF (0 Poble OR Pobla + Pl) (NOT -1 Fem LINK NOT 0 MF) (NOT 1 Fem LINK NOT 0 MF);
+SELECT Poble IF (0 Poble OR Pobla + Pl) (-1 ("<els>") OR ("<Els>")) ;
+
+SELECT Turques IF (0 Turques OR Turquesa) (-1 ("llengua")) ;
+
+SELECT A IF (-1 ("observació")) (0 ("participant")) ;
+
+SELECT MF IF (-1 Det) (0 Ponent) ;
+SELECT MF IF (-2 Det) (-1 A) (0 Ponent) ;
+SELECT MF IF (-3 Det) (-2 Adv_PreAdv) (-1 A) (0 Ponent) ;
+REMOVE MF IF (-1C Prep) (0 Ponent) ;
+
+REMOVE N IF (-1 DetDef + Sg_strict) (0C N + Pl_strict OR Verb) ;
+REMOVE N IF (-1 DetDef + Pl_strict) (0C N + Sg_strict OR Verb) ;
+	# els reis catalans els faig a partir de
+
+REMOVE Copula IF (0 Copula) (1C V + P1 OR P2 OR P3) ;
+	# de la nostra era queda
+
+SELECT Num IF (0 Deu) (1 N) (2 ("abans") OR ("després")) ;
+	# Deu anys després
+SELECT Num IF (0 Deu) (1 A) (2 N) (3 ("abans") OR ("després")) ;
+SELECT Num IF (0 Deu) (1 N) (2 A) (3 ("abans") OR ("després")) ;
+
+SELECT Num IF (0 ("<I>")) (1 ("república") OR ("congrés") OR ("conferència")) ;
+SELECT Num IF (0 ("<V>")) (1 ("república") OR ("congrés") OR ("conferència")) ;
+SELECT Num IF (0 ("<X>")) (1 ("república") OR ("congrés") OR ("conferència")) ;
+
+SELECT CnjCoo IF (-1 >>>) (0 ("<I>")) (NOT 1 Rpar OR <<<) ;
+SELECT Num IF (-1 >>>) (0 ("<I>")) (1 Rpar OR <<<) ;
+
+SELECT Vblex IF (-1 Tn_nt) (0 N OR Vblex) (0 P3) ;
+	# això comporta
+SELECT Vblex IF (-1C Adv) (0C N OR Vblex) (1 Det) (2C N) ;
+SELECT Vblex IF (0C N OR Vblex) (0 ("posar")) (1 Det) (2 N) ;
+	# finalment posa l'esquena completament recta
+SELECT N IF (-2 Prep) (-1 Det) (0 N OR Vblex) (1 A) ;
+SELECT N IF (-2C Prep) (-1 Det) (0C N OR Vblex) ;
+	# que corre paral·lela a la costa sud-americana del Pacífic
+SELECT N IF (-2 Prep) (-1 Pos) (0 N OR Vblex) (1 A) ;
+SELECT N IF (-2C Prep) (-1 Pos) (0C N OR Vblex) ;
+	# juntament amb la seva guarda personal
+
+REMOVE Itg IF (0 Com) (1 (":")) ;
+	# paraules com:
+REMOVE Itg IF (NOT -2 V LINK -1 Adv) (0 Com) ;
+	# no sé com
+REMOVE Itg IF (NOT -1 >>>) (NOT -1 Verb) (NOT -1 Adv) (NOT -1 Prep) (0 Com) ;
+REMOVE Itg IF (-1 >>>) (0 Com) (NOT 1 Verb) (NOT 1 Pron) ;
+	# not: com fas? com tu fas? com li fas?
 
 #
 # Desambiguació "los" enc / els "pro"
@@ -351,319 +520,332 @@ SELECT SUB:1 Li IF (0/* V_CD_CI) (1 Det) ;
 #
 
 # NOM / ADJ
-REMOVE:r_na_4 A OR PP IF (-1 Prep) (0 Noun_Adj_PP LINK 0 N OR NP) (NOT 0 ("passat") OR ("passada")) (1 <<< OR Prep OR Det OR CnjSub) ;
-REMOVE:r_na_4b A OR PP IF (-1/* Prep) (0 Noun_Adj_PP LINK 0 N OR NP) (NOT 0 ("passat") OR ("passada")) (1 <<< OR Prep OR Det OR CnjSub) ;
-REMOVE:r_na_4c A OR PP IF (-1 Prep) (0 Noun_Adj_PP LINK 0 N OR NP) (NOT 0 ("passat") OR ("passada")) (1 CM) (2 Prep OR Det OR CnjSub OR CnjCoo) ;
-REMOVE:r_na_4d A OR PP IF (-1/* Prep) (0 Noun_Adj_PP LINK 0 N OR NP) (NOT 0 ("passat") OR ("passada")) (1 CM) (2 Prep OR Det OR CnjSub OR CnjCoo) ;
+REMOVE A OR PP IF (-1 Prep) (0 Noun_Adj_PP LINK 0 N OR NP) (NOT 0 ("passat") OR ("passada")) (1 <<< OR Prep OR Det OR CnjSub) ;
+REMOVE A OR PP IF (-1/* Prep) (0 Noun_Adj_PP LINK 0 N OR NP) (NOT 0 ("passat") OR ("passada")) (1 <<< OR Prep OR Det OR CnjSub) ;
+REMOVE A OR PP IF (-1 Prep) (0 Noun_Adj_PP LINK 0 N OR NP) (NOT 0 ("passat") OR ("passada")) (1 CM) (2 Prep OR Det OR CnjSub OR CnjCoo) ;
+REMOVE A OR PP IF (-1/* Prep) (0 Noun_Adj_PP LINK 0 N OR NP) (NOT 0 ("passat") OR ("passada")) (1 CM) (2 Prep OR Det OR CnjSub OR CnjCoo) ;
 # eren semblants al Sol, però [VERIFY: funciona amb cat-disam, però no amb cat-tagger]
-REMOVE:r_na_4e A OR PP IF (-1 Prep) (0 Noun_Adj_PP LINK 0 N OR NP) (1 CM OR CnjCoo) (2 CnjSub) ;
+REMOVE A OR PP IF (-1 Prep) (0 Noun_Adj_PP LINK 0 N OR NP) (1 CM OR CnjCoo) (2 CnjSub) ;
 
-REMOVE:r_na_5_ms A OR PP IF (NOT -2 ("com") OR ("Com")) (-1 Det + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN OR Ant_Cog) ;
-REMOVE:r_na_5_fs A OR PP IF (NOT -2 ("com") OR ("Com")) (-1 Det + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN OR Ant_Cog) ;
-REMOVE:r_na_5_mp A OR PP IF (NOT -2 ("com") OR ("Com")) (-1 Det + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN OR Ant_Cog) ;
-REMOVE:r_na_5_fp A OR PP IF (NOT -2 ("com") OR ("Com")) (-1 Det + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN OR Ant_Cog) ;
-REMOVE:r_na_5_msv A OR PP IF (NOT -2 ("com") OR ("Com")) (-1 Det + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1C Verb) ;
-REMOVE:r_na_5_fsv A OR PP IF (NOT -2 ("com") OR ("Com")) (-1 Det + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1C Verb) ;
-REMOVE:r_na_5_mpv A OR PP IF (NOT -2 ("com") OR ("Com")) (-1 Det + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1C Verb) ;
-REMOVE:r_na_5_fpv A OR PP IF (NOT -2 ("com") OR ("Com")) (-1 Det + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1C Verb) ;
-REMOVE:r_na_5_mscop A OR PP IF (NOT -2 ("com") OR ("Com")) (-1 Det + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1 Copula) ;
-REMOVE:r_na_5_fscop A OR PP IF (NOT -2 ("com") OR ("Com")) (-1 Det + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1 Copula) ;
-REMOVE:r_na_5_mpcop A OR PP IF (NOT -2 ("com") OR ("Com")) (-1 Det + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1 Copula) ;
-REMOVE:r_na_5_fpcop A OR PP IF (NOT -2 ("com") OR ("Com")) (-1 Det + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1 Copula) ;
-REMOVE:r_na_5_mscom A OR PP IF (NOT -2 ("com") OR ("Com")) (-1 Det + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1 CM OR CnjCoo) (2 Barrera_Final_Estrict_SN) ;
-REMOVE:r_na_5_fscom A OR PP IF (NOT -2 ("com") OR ("Com")) (-1 Det + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1 CM OR CnjCoo) (2 Barrera_Final_Estrict_SN) ;
-REMOVE:r_na_5_mpcom A OR PP IF (NOT -2 ("com") OR ("Com")) (-1 Det + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1 CM OR CnjCoo) (2 Barrera_Final_Estrict_SN) ;
-REMOVE:r_na_5_fpcom A OR PP IF (NOT -2 ("com") OR ("Com")) (-1 Det + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1 CM OR CnjCoo) (2 Barrera_Final_Estrict_SN) ;
+REMOVE A OR PP IF (NOT -2 Com OR Ant) (-1 Det + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN OR Ant_Cog) ;
+REMOVE A OR PP IF (NOT -2 Com OR Ant) (-1 Det + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN OR Ant_Cog) ;
+REMOVE A OR PP IF (NOT -2 Com) (-1 Det + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN OR Ant_Cog) ;
+REMOVE A OR PP IF (NOT -2 Com) (-1 Det + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN OR Ant_Cog) ;
+REMOVE N IF (-2 Ant) (-1 Def + MascSg) (0 Noun_Adj_PP + MascSg) ;
+REMOVE N IF (-2 Ant) (-1 Def + FemSg) (0 Noun_Adj_PP + FemSg) ;
+# Martí l'Humà
+REMOVE A OR PP IF (NOT -2 Com) (-1 Det + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1C Verb) ;
+REMOVE A OR PP IF (NOT -2 Com) (-1 Det + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1C Verb) ;
+REMOVE A OR PP IF (NOT -2 Com) (-1 Det + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1C Verb) ;
+REMOVE A OR PP IF (NOT -2 Com) (-1 Det + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1C Verb) ;
+REMOVE A OR PP IF (NOT -2 Com) (-1 Det + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1 Copula) ;
+REMOVE A OR PP IF (NOT -2 Com) (-1 Det + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1 Copula) ;
+REMOVE A OR PP IF (NOT -2 Com) (-1 Det + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1 Copula) ;
+REMOVE A OR PP IF (NOT -2 Com) (-1 Det + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1 Copula) ;
+REMOVE A OR PP IF (NOT -2 Com) (-1 Det + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1 CM OR CnjCoo) (2 Barrera_Final_Estrict_SN) ;
+REMOVE A OR PP IF (NOT -2 Com) (-1 Det + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1 CM OR CnjCoo) (2 Barrera_Final_Estrict_SN) ;
+REMOVE A OR PP IF (NOT -2 Com) (-1 Det + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1 CM OR CnjCoo) (2 Barrera_Final_Estrict_SN) ;
+REMOVE A OR PP IF (NOT -2 Com) (-1 Det + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1 CM OR CnjCoo) (2 Barrera_Final_Estrict_SN) ;
 
-REMOVE:r_na_5_ms A OR PP IF (-2 ("com") OR ("Com")) (-1 Det + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN OR Ant_Cog) (NOT -1 DetDef) ;
-REMOVE:r_na_5_fs A OR PP IF (-2 ("com") OR ("Com")) (-1 Det + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN OR Ant_Cog) (NOT -1 DetDef) ;
-REMOVE:r_na_5_mp A OR PP IF (-2 ("com") OR ("Com")) (-1 Det + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN OR Ant_Cog) (NOT -1 DetDef) ;
-REMOVE:r_na_5_fp A OR PP IF (-2 ("com") OR ("Com")) (-1 Det + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN OR Ant_Cog) (NOT -1 DetDef) ;
-REMOVE:r_na_5_msv A OR PP IF (-2 ("com") OR ("Com")) (-1 Det + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1C Verb) (NOT -1 DetDef) ;
-REMOVE:r_na_5_fsv A OR PP IF (-2 ("com") OR ("Com")) (-1 Det + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1C Verb) (NOT -1 DetDef) ;
-REMOVE:r_na_5_mpv A OR PP IF (-2 ("com") OR ("Com")) (-1 Det + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1C Verb) (NOT -1 DetDef) ;
-REMOVE:r_na_5_fpv A OR PP IF (-2 ("com") OR ("Com")) (-1 Det + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1C Verb) (NOT -1 DetDef) ;
-REMOVE:r_na_5_mscop A OR PP IF (-2 ("com") OR ("Com")) (-1 Det + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1 Copula) (NOT -1 DetDef) ;
-REMOVE:r_na_5_fscop A OR PP IF (-2 ("com") OR ("Com")) (-1 Det + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1 Copula) (NOT -1 DetDef) ;
-REMOVE:r_na_5_mpcop A OR PP IF (-2 ("com") OR ("Com")) (-1 Det + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1 Copula) (NOT -1 DetDef) ;
-REMOVE:r_na_5_fpcop A OR PP IF (-2 ("com") OR ("Com")) (-1 Det + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1 Copula) (NOT -1 DetDef) ;
-REMOVE:r_na_5_mscom A OR PP IF (-2 ("com") OR ("Com")) (-1 Det + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1 CM OR CnjCoo) (2 Barrera_Final_Estrict_SN) (NOT -1 DetDef) ;
-REMOVE:r_na_5_fscom A OR PP IF (-2 ("com") OR ("Com")) (-1 Det + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1 CM OR CnjCoo) (2 Barrera_Final_Estrict_SN) (NOT -1 DetDef) ;
-REMOVE:r_na_5_mpcom A OR PP IF (-2 ("com") OR ("Com")) (-1 Det + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1 CM OR CnjCoo) (2 Barrera_Final_Estrict_SN) (NOT -1 DetDef) ;
-REMOVE:r_na_5_fpcom A OR PP IF (-2 ("com") OR ("Com")) (-1 Det + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1 CM OR CnjCoo) (2 Barrera_Final_Estrict_SN) (NOT -1 DetDef) ;
+REMOVE A OR PP IF (-2 Com) (-1 Det + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN OR Ant_Cog) (NOT -1 DetDef) ;
+REMOVE A OR PP IF (-2 Com) (-1 Det + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN OR Ant_Cog) (NOT -1 DetDef) ;
+REMOVE A OR PP IF (-2 Com) (-1 Det + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN OR Ant_Cog) (NOT -1 DetDef) ;
+REMOVE A OR PP IF (-2 Com) (-1 Det + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN OR Ant_Cog) (NOT -1 DetDef) ;
+REMOVE A OR PP IF (-2 Com) (-1 Det + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1C Verb) (NOT -1 DetDef) ;
+REMOVE A OR PP IF (-2 Com) (-1 Det + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1C Verb) (NOT -1 DetDef) ;
+REMOVE A OR PP IF (-2 Com) (-1 Det + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1C Verb) (NOT -1 DetDef) ;
+REMOVE A OR PP IF (-2 Com) (-1 Det + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1C Verb) (NOT -1 DetDef) ;
+REMOVE A OR PP IF (-2 Com) (-1 Det + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1 Copula) (NOT -1 DetDef) ;
+REMOVE A OR PP IF (-2 Com) (-1 Det + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1 Copula) (NOT -1 DetDef) ;
+REMOVE A OR PP IF (-2 Com) (-1 Det + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1 Copula) (NOT -1 DetDef) ;
+REMOVE A OR PP IF (-2 Com) (-1 Det + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1 Copula) (NOT -1 DetDef) ;
+REMOVE A OR PP IF (-2 Com) (-1 Det + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1 CM OR CnjCoo) (2 Barrera_Final_Estrict_SN) (NOT -1 DetDef) ;
+REMOVE A OR PP IF (-2 Com) (-1 Det + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1 CM OR CnjCoo) (2 Barrera_Final_Estrict_SN) (NOT -1 DetDef) ;
+REMOVE A OR PP IF (-2 Com) (-1 Det + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1 CM OR CnjCoo) (2 Barrera_Final_Estrict_SN) (NOT -1 DetDef) ;
+REMOVE A OR PP IF (-2 Com) (-1 Det + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1 CM OR CnjCoo) (2 Barrera_Final_Estrict_SN) (NOT -1 DetDef) ;
 
-SELECT:s_na_1_ms N IF (-1 Det + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK NOT 0 NP) (1 <<< OR Prep OR Det) ;
-SELECT:s_na_1_fs N IF (-1 Det + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK NOT 0 NP) (1 <<< OR Prep OR Det) ;
-SELECT:s_na_1_mp N IF (-1 Det + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK NOT 0 NP) (1 <<< OR Prep OR Det) ;
-SELECT:s_na_1_fp N IF (-1 Det + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK NOT 0 NP) (1 <<< OR Prep OR Det) ;
+SELECT N IF (-1 Det + MascSg) (0 Noun_Adj_PP + MascSg LINK NOT 0 NP) (1 <<< OR Prep OR Det) ;
+SELECT N IF (-1 Det + FemSg) (0 Noun_Adj_PP + FemSg LINK NOT 0 NP) (1 <<< OR Prep OR Det) ;
+SELECT N IF (-1 Det + MascPl) (0 Noun_Adj_PP + MascPl LINK NOT 0 NP) (1 <<< OR Prep OR Det) ;
+SELECT N IF (-1 Det + FemPl) (0 Noun_Adj_PP + FemPl LINK NOT 0 NP) (1 <<< OR Prep OR Det) ;
 	# la ofensiva de pascua
 	# la política del gobierno (per error, es veu Det i no Prep)
 
-REMOVE N IF (-2 Det + Def + $$MascSg) (-1 ("més") OR ("menys")) (0 Noun_Adj_PP + $$MascSg LINK NOT 0 NP) (1 <<< OR Prep OR Det) ;
-REMOVE N IF (-2 Det + Def + $$FemSg) (-1 ("més") OR ("menys")) (0 Noun_Adj_PP + $$FemSg LINK NOT 0 NP) (1 <<< OR Prep OR Det) ;
-REMOVE N IF (-2 Det + Def + $$MascPl) (-1 ("més") OR ("menys")) (0 Noun_Adj_PP + $$MascPl LINK NOT 0 NP) (1 <<< OR Prep OR Det) ;
-REMOVE N IF (-2 Det + Def + $$FemPl) (-1 ("més") OR ("menys")) (0 Noun_Adj_PP + $$FemPl LINK NOT 0 NP) (1 <<< OR Prep OR Det) ;
+REMOVE N IF (-2 Det + Def + MascSg) (-1 ("més") OR ("menys")) (0 Noun_Adj_PP + MascSg LINK NOT 0 NP) (1 <<< OR Prep OR Det) ;
+REMOVE N IF (-2 Det + Def + FemSg) (-1 ("més") OR ("menys")) (0 Noun_Adj_PP + FemSg LINK NOT 0 NP) (1 <<< OR Prep OR Det) ;
+REMOVE N IF (-2 Det + Def + MascPl) (-1 ("més") OR ("menys")) (0 Noun_Adj_PP + MascPl LINK NOT 0 NP) (1 <<< OR Prep OR Det) ;
+REMOVE N IF (-2 Det + Def + FemPl) (-1 ("més") OR ("menys")) (0 Noun_Adj_PP + FemPl LINK NOT 0 NP) (1 <<< OR Prep OR Det) ;
 	# el més extemista de tots
 	# és la més comuna.
 
-SELECT A IF (-3 N + $$MascSg) (-2 A + $$MascSg) (-1 ("més") OR ("menys")) (0 A + $$MascSg LINK NOT 0 NP) ;
-SELECT A IF (-3 N + $$FemSg) (-2 A + $$FemSg) (-1 ("més") OR ("menys")) (0 A + $$FemSg LINK NOT 0 NP) ;
-SELECT A IF (-3 N + $$MascPl) (-2 A + $$MascPl) (-1 ("més") OR ("menys")) (0 A + $$MascPl LINK NOT 0 NP) ;
-SELECT A IF (-3 N + $$FemPl) (-2 A + $$FemPl) (-1 ("més") OR ("menys")) (0 A + $$FemPl LINK NOT 0 NP) ;
+SELECT A IF (-3 N + MascSg) (-2 A + MascSg) (-1 ("més") OR ("menys")) (0 A + MascSg LINK NOT 0 NP) ;
+SELECT A IF (-3 N + FemSg) (-2 A + FemSg) (-1 ("més") OR ("menys")) (0 A + FemSg LINK NOT 0 NP) ;
+SELECT A IF (-3 N + MascPl) (-2 A + MascPl) (-1 ("més") OR ("menys")) (0 A + MascPl LINK NOT 0 NP) ;
+SELECT A IF (-3 N + FemPl) (-2 A + FemPl) (-1 ("més") OR ("menys")) (0 A + FemPl LINK NOT 0 NP) ;
 	# l'activitat industrial més activa
 	# les llengües internacionales més esteses
 
-REMOVE N IF (-3 N + $$MascSg) (-2 A + $$MascSg) (-1 ("i")) (0 A + $$MascSg) (0 N) ;
-REMOVE N IF (-3 N + $$FemSg) (-2 A + $$FemSg) (-1 ("i")) (0 A + $$FemSg) (0 N) ;
-REMOVE N IF (-3 N + $$MascPl) (-2 A + $$MascPl) (-1 ("i")) (0 A + $$MascPl) (0 N) ;
-REMOVE N IF (-3 N + $$FemPl) (-2 A + $$FemPl) (-1 ("i")) (0 A + $$FemPl) (0 N) ;
+REMOVE N IF (-1C N + MascSg) (0 N OR A + MascSg) (1 (",")) (2 A + MascSg)  (3 ("i")) (4 A + MascSg) ;
+REMOVE N IF (-1C N + FemSg) (0 N OR A + FemSg) (1 (",")) (2 A + FemSg)  (3 ("i")) (4 A + FemSg) ;
+REMOVE N IF (-1C N + MascPl) (0 N OR A + MascPl) (1 (",")) (2 A + MascPl)  (3 ("i")) (4 A + MascPl) ;
+REMOVE N IF (-1C N + FemPl) (0 N OR A + FemPl) (1 (",")) (2 A + FemPl)  (3 ("i")) (4 A + FemPl) ;
+	# ortografia francesa, llatina i grega
+
+REMOVE N IF (-3 N + MascSg) (-2 A + MascSg) (-1 ("i")) (0 A + MascSg) (0 N) ;
+REMOVE N IF (-3 N + FemSg) (-2 A + FemSg) (-1 ("i")) (0 A + FemSg) (0 N) ;
+REMOVE N IF (-3 N + MascPl) (-2 A + MascPl) (-1 ("i")) (0 A + MascPl) (0 N) ;
+REMOVE N IF (-3 N + FemPl) (-2 A + FemPl) (-1 ("i")) (0 A + FemPl) (0 N) ;
 	# el seu caràcter màgic i religiós
 
-SELECT:n_a_eos_1 N IF (0 Noun_Adj_PP LINK NOT 0 Adv OR PP OR Ger OR Inf OR NP OR Prep OR ("ser") OR ("sino")) (NOT 0 ("cap")) (-1C Vblex) (NOT -1 PP OR ("hablar") OR VPred) (1 Barrera_Final_Estrict_SN) ;
+SELECT N IF (0 Noun_Adj_PP LINK NOT 0 Adv OR PP OR Ger OR Inf OR NP OR Prep OR ("ser") OR ("sinó")) (NOT 0 ("cap")) (-1C Vblex) (NOT -1 PP OR ("parlar") OR VInd) (1 Barrera_Final_Estrict_SN) ;
 	# detonar explosivos.
 	# nos vino impuesto.
-SELECT:n_a_eos_1b N IF (0 Noun_Adj_PP LINK NOT 0 Adv OR PP OR Ger OR Inf OR NP OR Prep OR ("ser") OR ("sino")) (-1C Vblex) (NOT -1 PP OR ("hablar") OR VPred) (1 CnjCoo) (2 Barrera_Final_Estrict_SN) ;
+SELECT N IF (0 Noun_Adj_PP LINK NOT 0 Adv OR PP OR Ger OR Inf OR NP OR Prep OR ("ser") OR ("sinó")) (-1C Vblex) (NOT -1 PP OR ("parlar") OR VInd) (1 CnjCoo) (2 Barrera_Final_Estrict_SN) ;
 	# detonando explosivos y derrumbando
 
-SELECT:n_a_eos_2 N IF (0 Noun_Adj_PP LINK NOT 0 NP OR ("ser") OR Prep) (-1 Det) (NOT -1 ("este") OR ("Este")) (1 Barrera_Final_Estrict_SN) ;
-SELECT:n_a_eos_3 N IF (0 Noun_Adj_PP LINK NOT 0 NP OR ("ser") OR Prep) (-1 Det) (NOT -1 ("este") OR ("Este")) (1 CM OR CnjCoo) (1 Barrera_Final_Estrict_SN) ;
+SELECT N IF (0 Noun_Adj_PP LINK NOT 0 NP OR ("ser") OR Prep) (-1C Det) (1 Barrera_Final_Estrict_SN) ;
+SELECT N IF (0 Noun_Adj_PP LINK NOT 0 NP OR ("ser") OR Prep) (-1C Det) (1 CM OR CnjCoo) (1 Barrera_Final_Estrict_SN) ;
 	# detonar los explosivos.
 	# PERO: Las clasificaciones más reconocidas internacionalmente son la francesa y la estadounidense.
 	# PERO: muy poco conocida.
 
-REMOVE:pr_n_pr1 A OR PP IF (NOT -2 Verb) (-1 Prep LINK NOT 0 Com) (0 N LINK NOT 0 NP LINK NOT 0 Copula) (NOT 0 ("passat") OR ("passada")) (1 Barrera_Final_SN LINK NOT 0 PP LINK NOT 0 N) ;
-SELECT:pr_n_pr1b N IF (NOT -2 Verb) (-1 Prep LINK NOT 0 Com) (0 N LINK NOT 0 NP LINK NOT 0 Copula LINK NOT 0 PreDet) (NOT 0 ("passat") OR ("passada")) (1 Barrera_Final_Estrict_SN LINK NOT 0 PP LINK NOT 0 N) ;
-SELECT:pr_n_pr2 N IF (NOT -2 Verb) (-1 Prep LINK NOT 0 Com) (0 N LINK NOT 0 NP LINK NOT 0 Copula) (1 CM OR CnjCoo) (2 Barrera_Final_SN LINK NOT 0 PP) ;
-SELECT:pr_n_pr3 N IF (-2 PP) (-1 ("por")) (0 N LINK NOT 0 NP LINK NOT 0 Copula) (1 Barrera_Final_SN LINK NOT 0 PP LINK NOT 0 N) ;
-SELECT:pr_n_pr4 N IF (-2 PP) (-1 ("por")) (0 N LINK NOT 0 NP LINK NOT 0 Copula) (1 CM OR CnjCoo) (2 Barrera_Final_SN LINK NOT 0 PP) ;
+REMOVE A OR PP IF (NOT -2 Verb) (-1 Prep LINK NOT 0 Com) (0 N LINK NOT 0 NP LINK NOT 0 Copula) (NOT 0 ("passat") OR ("passada")) (1 Barrera_Final_SN LINK NOT 0 PP LINK NOT 0 N) ;
+SELECT N IF (NOT -2 Verb) (-1 Prep LINK NOT 0 Com) (0 N LINK NOT 0 NP LINK NOT 0 Copula LINK NOT 0 PreDet LINK NOT 0 Pron) (NOT 0 ("passat") OR ("passada")) (1 Barrera_Final_Estrict_SN LINK NOT 0 PP LINK NOT 0 N) ;
+SELECT N IF (NOT -2 Verb) (-1 Prep LINK NOT 0 Com) (0 N LINK NOT 0 NP LINK NOT 0 Copula) (1 CM OR CnjCoo) (2 Barrera_Final_SN LINK NOT 0 PP) ;
+SELECT N IF (-2 PP) (-1 ("por")) (0 N LINK NOT 0 NP LINK NOT 0 Copula) (1 Barrera_Final_SN LINK NOT 0 PP LINK NOT 0 N) ;
+SELECT N IF (-2 PP) (-1 ("por")) (0 N LINK NOT 0 NP LINK NOT 0 Copula) (1 CM OR CnjCoo) (2 Barrera_Final_SN LINK NOT 0 PP) ;
 
 # NP / ADJ
 
-SELECT:s_na_1_arg NP IF (-1 Det + Fem) (0 ("Argentina") OR ("India") OR ("Filipines") OR ("Balears") OR ("Canàries") OR ("Polinèsia")) (1 <<< OR Prep OR Det OR CM) ;
-SELECT:s_na_1_med NP IF (-1 Det + Masc) (0 ("Mediterrani") OR ("Atlàntic") OR ("Cantàbric") OR ("Pacífic") OR ("Índic") OR ("Àrtic")) (1 <<< OR Prep OR Det OR CM) ;
+SELECT NP IF (-1 Det + Fem) (0 ("Argentina") OR ("India") OR ("Filipines") OR ("Balears") OR ("Canàries") OR ("Polinèsia")) (1 <<< OR Prep OR Det OR CM) ;
+SELECT NP IF (-1 Det + Masc) (0 ("Mediterrani") OR ("Atlàntic") OR ("Cantàbric") OR ("Pacífic") OR ("Índic") OR ("Àrtic")) (1 <<< OR Prep OR Det OR CM) ;
 
 # NP / N
-REMOVE:r_na_3_ms Noun_Adj_PP IF (-1 Det + $$MascSg) (0 NP + $$MascSg) (1 Adj_PP + $$MascSg) ;
-REMOVE:r_na_3_mp Noun_Adj_PP IF (-1 Det + $$MascPl) (0 NP + $$MascPl) (1 Adj_PP + $$MascPl) ;
-REMOVE:r_na_3_fs Noun_Adj_PP IF (-1 Det + $$FemSg) (0 NP + $$FemSg) (1 Adj_PP + $$FemSg) ;
-REMOVE:r_na_3_fp Noun_Adj_PP IF (-1 Det + $$FemPl) (0 NP + $$FemPl) (1 Adj_PP + $$FemPl) ;
+REMOVE Noun_Adj_PP IF (-1 Det + MascSg) (0 NP + MascSg) (1 Adj_PP + MascSg) ;
+REMOVE Noun_Adj_PP IF (-1 Det + MascPl) (0 NP + MascPl) (1 Adj_PP + MascPl) ;
+REMOVE Noun_Adj_PP IF (-1 Det + FemSg) (0 NP + FemSg) (1 Adj_PP + FemSg) ;
+REMOVE Noun_Adj_PP IF (-1 Det + FemPl) (0 NP + FemPl) (1 Adj_PP + FemPl) ;
 # la Indochina francesa (cal treure Indochina n)
 
 # ADJ NOM
 
 # elimina la opción "adjetivo" de aquellos adjetivos que sólo pueden anteceder un nombre ("buen", "mal", etc.) y no están delante de uno
-REMOVE:pre_adj_1 A IF (0 PreAdj) (NOT 1 N) ;
+REMOVE A IF (0 PreAdj) (NOT 1 N) ;
 
-REMOVE:r_na_6_ms A OR PP IF (-2 Det + $$MascSg) (-1C A + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1 Barrera_Final_SN OR Ant_Cog) ;
-REMOVE:r_na_6_fs A OR PP IF (-2 Det + $$FemSg) (-1C A + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1 Barrera_Final_SN OR Ant_Cog) ;
-REMOVE:r_na_6_mp A OR PP IF (-2 Det + $$MascPl) (-1C A + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1 Barrera_Final_SN OR Ant_Cog) ;
-REMOVE:r_na_6_fp A OR PP IF (-2 Det + $$FemPl) (-1C A + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1 Barrera_Final_SN OR Ant_Cog) ;
+REMOVE A OR PP IF (-2 Det + MascSg) (-1C A + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1 Barrera_Final_SN OR Ant_Cog) ;
+REMOVE A OR PP IF (-2 Det + FemSg) (-1C A + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1 Barrera_Final_SN OR Ant_Cog) ;
+REMOVE A OR PP IF (-2 Det + MascPl) (-1C A + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1 Barrera_Final_SN OR Ant_Cog) ;
+REMOVE A OR PP IF (-2 Det + FemPl) (-1C A + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1 Barrera_Final_SN OR Ant_Cog) ;
 ## PERO: una densa doble capa de pelo
 
-REMOVE:r_na_6_msc A OR PP IF (-2 Det + $$MascSg) (-1C A + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1 CM) (2 Barrera_Final_Estrict_SN) ;
-REMOVE:r_na_6_fsc A OR PP IF (-2 Det + $$FemSg) (-1C A + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1 CM) (2 Barrera_Final_Estrict_SN) ;
-REMOVE:r_na_6_mpc A OR PP IF (-2 Det + $$MascPl) (-1C A + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1 CM) (2 Barrera_Final_Estrict_SN) ;
-REMOVE:r_na_6_fpc A OR PP IF (-2 Det + $$FemPl) (-1C A + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1 CM) (2 Barrera_Final_Estrict_SN) ;
-REMOVE:r_na_6b_ms A OR PP IF (-2C Verb) (-1C A + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1 Barrera_Final_SN) ;
-REMOVE:r_na_6b_fs A OR PP IF (-2C Verb) (-1C A + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1 Barrera_Final_SN) ;
-REMOVE:r_na_6b_mp A OR PP IF (-2C Verb) (-1C A + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1 Barrera_Final_SN) ;
-REMOVE:r_na_6b_fp A OR PP IF (-2C Verb) (-1C A + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1 Barrera_Final_SN) ;
-REMOVE:r_na_6b_msc A OR PP IF (-2C Verb) (-1C A + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1 CM) (2 Barrera_Final_Estrict_SN) ;
-REMOVE:r_na_6b_fsc A OR PP IF (-2C Verb) (-1C A + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1 CM) (2 Barrera_Final_Estrict_SN) ;
-REMOVE:r_na_6b_mpc A OR PP IF (-2C Verb) (-1C A + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1 CM) (2 Barrera_Final_Estrict_SN) ;
-REMOVE:r_na_6b_fpc A OR PP IF (-2C Verb) (-1C A + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1 CM) (2 Barrera_Final_Estrict_SN) ;
+REMOVE A OR PP IF (-2 Det + MascSg) (-1C A + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1 CM) (2 Barrera_Final_Estrict_SN) ;
+REMOVE A OR PP IF (-2 Det + FemSg) (-1C A + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1 CM) (2 Barrera_Final_Estrict_SN) ;
+REMOVE A OR PP IF (-2 Det + MascPl) (-1C A + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1 CM) (2 Barrera_Final_Estrict_SN) ;
+REMOVE A OR PP IF (-2 Det + FemPl) (-1C A + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1 CM) (2 Barrera_Final_Estrict_SN) ;
+REMOVE A OR PP IF (-2C Verb) (-1C A + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1 Barrera_Final_SN) ;
+REMOVE A OR PP IF (-2C Verb) (-1C A + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1 Barrera_Final_SN) ;
+REMOVE A OR PP IF (-2C Verb) (-1C A + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1 Barrera_Final_SN) ;
+REMOVE A OR PP IF (-2C Verb) (-1C A + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1 Barrera_Final_SN) ;
+REMOVE A OR PP IF (-2C Verb) (-1C A + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1 CM) (2 Barrera_Final_Estrict_SN) ;
+REMOVE A OR PP IF (-2C Verb) (-1C A + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1 CM) (2 Barrera_Final_Estrict_SN) ;
+REMOVE A OR PP IF (-2C Verb) (-1C A + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1 CM) (2 Barrera_Final_Estrict_SN) ;
+REMOVE A OR PP IF (-2C Verb) (-1C A + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1 CM) (2 Barrera_Final_Estrict_SN) ;
 
-SELECT:r_na_12_ms N IF (-2 Barrera_Inicial_SN LINK NOT 0 Verb) (-1C A + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN) ;
-SELECT:r_na_12_fs N IF (-2 Barrera_Inicial_SN LINK NOT 0 Verb) (-1C A + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN) ;
-SELECT:r_na_12_mp N IF (-2 Barrera_Inicial_SN LINK NOT 0 Verb) (-1C A + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN) ;
-SELECT:r_na_12_fp N IF (-2 Barrera_Inicial_SN LINK NOT 0 Verb) (-1C A + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN) ;
-SELECT:r_na_13_ms N IF (-3 Barrera_Inicial_SN LINK NOT 0 Verb) (-2C Det + $$MascSg) (-1C A + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN) ;
-SELECT:r_na_13_fs N IF (-3 Barrera_Inicial_SN LINK NOT 0 Verb) (-2C Det + $$FemSg) (-1C A + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN) ;
-SELECT:r_na_13_mp N IF (-3 Barrera_Inicial_SN LINK NOT 0 Verb) (-2C Det + $$MascPl) (-1C A + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN) ;
-SELECT:r_na_13_fp N IF (-3 Barrera_Inicial_SN LINK NOT 0 Verb) (-2C Det + $$FemPl) (-1C A + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN) ;
+SELECT N IF (-2 Barrera_Inicial_SN LINK NOT 0 Verb) (-1C A + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN) ;
+SELECT N IF (-2 Barrera_Inicial_SN LINK NOT 0 Verb) (-1C A + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN) ;
+SELECT N IF (-2 Barrera_Inicial_SN LINK NOT 0 Verb) (-1C A + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN) ;
+SELECT N IF (-2 Barrera_Inicial_SN LINK NOT 0 Verb) (-1C A + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN) ;
+SELECT N IF (-3 Barrera_Inicial_SN LINK NOT 0 Verb) (-2C Det + MascSg) (-1C A + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN) ;
+SELECT N IF (-3 Barrera_Inicial_SN LINK NOT 0 Verb) (-2C Det + FemSg) (-1C A + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN) ;
+SELECT N IF (-3 Barrera_Inicial_SN LINK NOT 0 Verb) (-2C Det + MascPl) (-1C A + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN) ;
+SELECT N IF (-3 Barrera_Inicial_SN LINK NOT 0 Verb) (-2C Det + FemPl) (-1C A + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1 Barrera_Final_Estrict_SN) ;
 
 # NOM ADJ
 
-REMOVE:r_na_1_ms A OR PP IF (-1 Barrera_Inicial_Estrict_SN) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1 Adj_PP + $$MascSg) ;
-REMOVE:r_na_1_mp A OR PP IF (-1 Barrera_Inicial_Estrict_SN) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1 Adj_PP + $$MascPl) ;
-REMOVE:r_na_1_fs A OR PP IF (-1 Barrera_Inicial_Estrict_SN) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1 Adj_PP + $$FemSg) ;
-REMOVE:r_na_1_fp A OR PP IF (-1 Barrera_Inicial_Estrict_SN) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1 Adj_PP + $$FemPl) ;
+REMOVE A OR PP IF (-1 Barrera_Inicial_Estrict_SN) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1 Adj_PP + MascSg) (NOT 0 ("nou") OR ("sol")) ;
+REMOVE A OR PP IF (-1 Barrera_Inicial_Estrict_SN) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1 Adj_PP + MascPl) (NOT 0 ("nou") OR ("sol")) ;
+REMOVE A OR PP IF (-1 Barrera_Inicial_Estrict_SN) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1 Adj_PP + FemSg) (NOT 0 ("nou") OR ("sol")) ;
+REMOVE A OR PP IF (-1 Barrera_Inicial_Estrict_SN) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1 Adj_PP + FemPl) (NOT 0 ("nou") OR ("sol")) ;
 ## jóvenes inteligentes (jóvenes > n)
 ## jóvenes encapuchadas (jóvenes > n)
 ## abisenios inteligentes (jóvenes > n)
 ## escrito largo (escrito > n)
+## nous materials
+## pels sols fets de
 
-REMOVE:r_na_3_ms_adj A OR PP IF (NOT -1 N OR A OR PP OR ("ser") OR ("estar")) (0 Noun_Adj + $$MascSg LINK 0 N OR NP) (NOT 0 Trencat) (1 Adj_PP + $$MascSg) ;
-REMOVE:r_na_3_mp_adj A OR PP IF (NOT -1 N OR A OR PP OR ("ser") OR ("estar")) (0 Noun_Adj + $$MascPl LINK 0 N OR NP) (NOT 0 Trencat) (1 Adj_PP + $$MascPl) ;
-REMOVE:r_na_3_fs_adj A OR PP IF (NOT -1 N OR A OR PP OR ("ser") OR ("estar")) (0 Noun_Adj + $$FemSg LINK 0 N OR NP) (1 Adj_PP + $$FemSg) ;
-REMOVE:r_na_3_fp_adj A OR PP IF (NOT -1 N OR A OR PP OR ("ser") OR ("estar")) (0 Noun_Adj + $$FemPl LINK 0 N OR NP) (1 Adj_PP + $$FemPl) ;
+REMOVE A OR PP IF (NOT -1 N OR A OR PP OR ("ser") OR ("estar")) (0 Noun_Adj + MascSg LINK 0 N OR NP) (NOT 0 Trencat) (NOT 0 ("nou") OR ("sol")) (1 Adj_PP + MascSg) ;
+REMOVE A OR PP IF (NOT -1 N OR A OR PP OR ("ser") OR ("estar")) (0 Noun_Adj + MascPl LINK 0 N OR NP) (NOT 0 Trencat) (NOT 0 ("nou") OR ("sol")) (1 Adj_PP + MascPl) ;
+REMOVE A OR PP IF (NOT -1 N OR A OR PP OR ("ser") OR ("estar")) (0 Noun_Adj + FemSg LINK 0 N OR NP) (NOT 0 ("nou") OR ("sol")) (1 Adj_PP + FemSg) ;
+REMOVE A OR PP IF (NOT -1 N OR A OR PP OR ("ser") OR ("estar")) (0 Noun_Adj + FemPl LINK 0 N OR NP) (NOT 0 ("nou") OR ("sol")) (1 Adj_PP + FemPl) ;
 
-REMOVE:r_na_3_ms_pp PP IF (NOT -1 N OR Vbhaver OR ("ser") OR ("estar")) (0 PP + $$MascSg LINK 0 N OR NP) (1 Adj_PP + $$MascSg) ;
-REMOVE:r_na_3_mp_pp PP IF (NOT -1 N OR Vbhaver OR ("ser") OR ("estar")) (0 PP + $$MascPl LINK 0 N OR NP) (1 Adj_PP + $$MascPl) ;
-REMOVE:r_na_3_fs_pp PP IF (NOT -1 N OR Vbhaver OR ("ser") OR ("estar")) (0 PP + $$FemSg LINK 0 N OR NP) (1 Adj_PP + $$FemSg) ;
-REMOVE:r_na_3_fp_pp PP IF (NOT -1 N OR Vbhaver OR ("ser") OR ("estar")) (0 PP + $$FemPl LINK 0 N OR NP) (1 Adj_PP + $$FemPl) ;
+REMOVE PP IF (NOT -1 N OR Vbhaver OR ("ser") OR ("estar")) (0 PP + MascSg LINK 0 N OR NP) (1 Adj_PP + MascSg) ;
+REMOVE PP IF (NOT -1 N OR Vbhaver OR ("ser") OR ("estar")) (0 PP + MascPl LINK 0 N OR NP) (1 Adj_PP + MascPl) ;
+REMOVE PP IF (NOT -1 N OR Vbhaver OR ("ser") OR ("estar")) (0 PP + FemSg LINK 0 N OR NP) (1 Adj_PP + FemSg) ;
+REMOVE PP IF (NOT -1 N OR Vbhaver OR ("ser") OR ("estar")) (0 PP + FemPl LINK 0 N OR NP) (1 Adj_PP + FemPl) ;
 ## vieron jóvenes inteligentes (jóvenes > n)
 ## vieron jóvenes encapuchadas (jóvenes > n)
 ## vieron abisenios inteligentes (jóvenes > n)
 ## PROBLEMA: con alto contenido (alto > n/adv); ídem per a adj ambigus típicament preposats: alto, bajo, mal (+flaco favor, etc.)
 ## Està fet més malament
 
-SELECT:na3_ms A OR PP IF (-1 N + $$MascSg) (0 Adj_PP + $$MascSg) (1 Adj_PP + $$MascSg) ;
-SELECT:na3_mp A OR PP IF (-1 N + $$MascPl) (0 Adj_PP + $$MascPl) (1 Adj_PP + $$MascPl) ;
-SELECT:na3_fs A OR PP IF (-1 N + $$FemSg) (0 Adj_PP + $$FemSg) (1 Adj_PP + $$FemSg) ;
-SELECT:na3_fp A OR PP IF (-1 N + $$FemPl) (0 Adj_PP + $$FemPl) (1 Adj_PP + $$FemPl) ;
+SELECT A OR PP IF (-1 N + MascSg) (0 Adj_PP + MascSg) (NOT 0 PreAdv) (1 Adj_PP + MascSg) (NOT 0 Adv) ;
+SELECT A OR PP IF (-1 N + MascPl) (0 Adj_PP + MascPl) (NOT 0 PreAdv) (1 Adj_PP + MascPl) (NOT 0 ("<segons>")) ;
+SELECT A OR PP IF (-1 N + FemSg) (0 Adj_PP + FemSg) (NOT 0 PreAdv) (1 Adj_PP + FemSg) ;
+SELECT A OR PP IF (-1 N + FemPl) (0 Adj_PP + FemPl) (NOT 0 PreAdv) (1 Adj_PP + FemPl) ;
 ## "la Primera Conferencia Americana celebrada" (pqè Americana > adj)
+## però: simbolisme molt complex
+## els avions segons diversos criteris
 
 # NOM ADJ ADJ
 
-SELECT:naa1_ms A OR PP IF (-2 N + $$MascSg) (-1 Adj_PP + $$MascSg) (0 Adj_PP + $$MascSg) (NOT 0 Det OR Ger) ;
-SELECT:naa1_mp A OR PP IF (-2 N + $$MascPl) (-1 Adj_PP + $$MascPl) (0 Adj_PP + $$MascPl) (NOT 0 Det OR Ger) ;
-SELECT:naa1_fs A OR PP IF (-2 N + $$FemSg) (-1 Adj_PP + $$FemSg) (0 Adj_PP + $$FemSg) (NOT 0 Det OR Ger) ;
-SELECT:naa1_fp A OR PP IF (-2 N + $$FemPl) (-1 Adj_PP + $$FemPl) (0 Adj_PP + $$FemPl) (NOT 0 Det OR Ger) ;
+SELECT A OR PP IF (-2 N + MascSg) (-1 Adj_PP + MascSg) (0 Adj_PP + MascSg) (NOT 0 Det OR Ger) ;
+SELECT A OR PP IF (-2 N + MascPl) (-1 Adj_PP + MascPl) (0 Adj_PP + MascPl) (NOT 0 Det OR Ger) ;
+SELECT A OR PP IF (-2 N + FemSg) (-1 Adj_PP + FemSg) (0 Adj_PP + FemSg) (NOT 0 Det OR Ger) ;
+SELECT A OR PP IF (-2 N + FemPl) (-1 Adj_PP + FemPl) (0 Adj_PP + FemPl) (NOT 0 Det OR Ger) ;
 
 # NOM ADJ ADJ ADJ
 
-SELECT:naaa1_ms A OR PP IF (-3 N + $$MascSg) (-2 N + $$MascSg) (-1 Adj_PP + $$MascSg) (0 Adj_PP + $$MascSg) (NOT 0 Det OR Ger) ;
-SELECT:naaa1_mp A OR PP IF (-3 N + $$MascPl) (-2 N + $$MascPl) (-1 Adj_PP + $$MascPl) (0 Adj_PP + $$MascPl) (NOT 0 Det OR Ger) ;
-SELECT:naaa1_fs A OR PP IF (-3 N + $$FemSg) (-2 N + $$FemSg) (-1 Adj_PP + $$FemSg) (0 Adj_PP + $$FemSg) (NOT 0 Det OR Ger) ;
-SELECT:naaa1_fp A OR PP IF (-3 N + $$FemPl) (-2 N + $$FemPl) (-1 Adj_PP + $$FemPl) (0 Adj_PP + $$FemPl) (NOT 0 Det OR Ger) ;
+SELECT A OR PP IF (-3 N + MascSg) (-2 N + MascSg) (-1 Adj_PP + MascSg) (0 Adj_PP + MascSg) (NOT 0 Det OR Ger) ;
+SELECT A OR PP IF (-3 N + MascPl) (-2 N + MascPl) (-1 Adj_PP + MascPl) (0 Adj_PP + MascPl) (NOT 0 Det OR Ger) ;
+SELECT A OR PP IF (-3 N + FemSg) (-2 N + FemSg) (-1 Adj_PP + FemSg) (0 Adj_PP + FemSg) (NOT 0 Det OR Ger) ;
+SELECT A OR PP IF (-3 N + FemPl) (-2 N + FemPl) (-1 Adj_PP + FemPl) (0 Adj_PP + FemPl) (NOT 0 Det OR Ger) ;
 ## "la Primera Conferencia Internacional Americana celebrada" (pqè Americana > adj)
 
 # NOM ADJ ADJ ADJ ADJ
 
-SELECT:naaa1_ms A OR PP IF (-4 N + $$MascSg) (-3 N + $$MascSg) (-2 N + $$MascSg) (-1 Adj_PP + $$MascSg) (0 Adj_PP + $$MascSg) (NOT 0 Det OR Ger) ;
-SELECT:naaa1_mp A OR PP IF (-4 N + $$MascPl) (-3 N + $$MascPl) (-2 N + $$MascPl) (-1 Adj_PP + $$MascPl) (0 Adj_PP + $$MascPl) (NOT 0 Det OR Ger) ;
-SELECT:naaa1_fs A OR PP IF (-4 N + $$FemSg) (-3 N + $$FemSg) (-2 N + $$FemSg) (-1 Adj_PP + $$FemSg) (0 Adj_PP + $$FemSg) (NOT 0 Det OR Ger) ;
-SELECT:naaa1_fp A OR PP IF (-4 N + $$FemPl) (-3 N + $$FemPl) (-2 N + $$FemPl) (-1 Adj_PP + $$FemPl) (0 Adj_PP + $$FemPl) (NOT 0 Det OR Ger) ;
+SELECT A OR PP IF (-4 N + MascSg) (-3 N + MascSg) (-2 N + MascSg) (-1 Adj_PP + MascSg) (0 Adj_PP + MascSg) (NOT 0 Det OR Ger) ;
+SELECT A OR PP IF (-4 N + MascPl) (-3 N + MascPl) (-2 N + MascPl) (-1 Adj_PP + MascPl) (0 Adj_PP + MascPl) (NOT 0 Det OR Ger) ;
+SELECT A OR PP IF (-4 N + FemSg) (-3 N + FemSg) (-2 N + FemSg) (-1 Adj_PP + FemSg) (0 Adj_PP + FemSg) (NOT 0 Det OR Ger) ;
+SELECT A OR PP IF (-4 N + FemPl) (-3 N + FemPl) (-2 N + FemPl) (-1 Adj_PP + FemPl) (0 Adj_PP + FemPl) (NOT 0 Det OR Ger) ;
 ## "la Primera Conferencia Internacional Americana celebrada" (pqè Americana > adj)
 
-#REMOVE:r_na_2_2_ms N IF (-3 N + $$MascSg) (-2 Adj_PP + $$MascSg) (-1 Adj_PP + $$MascSg) (0 Adj_PP + $$MascSg) (*1 Adj_PP + $$MascSg) ;
+#REMOVE N IF (-3 N + MascSg) (-2 Adj_PP + MascSg) (-1 Adj_PP + MascSg) (0 Adj_PP + MascSg) (*1 Adj_PP + MascSg) ;
 ## líder obrero norteamericano afiliado (afiliado > adj)
 
-#REMOVE:r_na_3_ms A OR PP IF (NOT -1 N) (0 Noun_Adj_PP + $$MascSg) (1 Adj_PP + $$MascSg) (*2 Adj_PP + $$MascSg BARRIER NO_Adj_PP) ; # at list one Adj_PP
+#REMOVE A OR PP IF (NOT -1 N) (0 Noun_Adj_PP + MascSg) (1 Adj_PP + MascSg) (*2 Adj_PP + MascSg BARRIER NO_Adj_PP) ; # at list one Adj_PP
 
 # NOM ADV ADJ
 
-SELECT:n_adv_a_1_ms A IF (-2C N + $$MascSg) (-1C Adv) (0 A + $$MascSg LINK NOT 0 Det) ;
-SELECT:n_adv_a_1_ms A IF (-2C N + $$FemSg) (-1C Adv) (0 A + $$FemSg LINK NOT 0 Det) ;
-SELECT:n_adv_a_1_ms A IF (-2C N + $$MascPl) (-1C Adv) (0 A + $$MascPl LINK NOT 0 Det) ;
-SELECT:n_adv_a_1_ms A IF (-2C N + $$FemPl) (-1C Adv) (0 A + $$FemPl LINK NOT 0 Det) ;
-SELECT:n_adv_a_2_ms A IF (-3 Barrera_Inicial_SN) (-2 N + $$MascSg) (-1C Adv) (0 A + $$MascSg LINK NOT 0 Det) ;
-SELECT:n_adv_a_2_ms A IF (-3 Barrera_Inicial_SN) (-2 N + $$FemSg) (-1C Adv) (0 A + $$FemSg LINK NOT 0 Det) ;
-SELECT:n_adv_a_2_ms A IF (-3 Barrera_Inicial_SN) (-2 N + $$MascPl) (-1C Adv) (0 A + $$MascPl LINK NOT 0 Det) ;
-SELECT:n_adv_a_2_ms A IF (-3 Barrera_Inicial_SN) (-2 N + $$FemPl) (-1C Adv) (0 A + $$FemPl LINK NOT 0 Det) ;
+SELECT A IF (-2C N + MascSg) (-1C Adv) (0 A + MascSg LINK NOT 0 Det) ;
+SELECT A IF (-2C N + FemSg) (-1C Adv) (0 A + FemSg LINK NOT 0 Det) ;
+SELECT A IF (-2C N + MascPl) (-1C Adv) (0 A + MascPl LINK NOT 0 Det) ;
+SELECT A IF (-2C N + FemPl) (-1C Adv) (0 A + FemPl LINK NOT 0 Det) ;
+SELECT A IF (-3 Barrera_Inicial_SN) (-2 N + MascSg) (-1C Adv) (0 A + MascSg LINK NOT 0 Det) ;
+SELECT A IF (-3 Barrera_Inicial_SN) (-2 N + FemSg) (-1C Adv) (0 A + FemSg LINK NOT 0 Det) ;
+SELECT A IF (-3 Barrera_Inicial_SN) (-2 N + MascPl) (-1C Adv) (0 A + MascPl LINK NOT 0 Det) ;
+SELECT A IF (-3 Barrera_Inicial_SN) (-2 N + FemPl) (-1C Adv) (0 A + FemPl LINK NOT 0 Det) ;
 # ". Civiles étnicamente croatas"
 
 # COORDINACIÓN
 
 # NOM CONJ NOM
 
-REMOVE:r_na_7_ms A OR PP IF (-1 Det + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1 CnjCoo) (2C N) ;
-REMOVE:r_na_7_fs A OR PP IF (-1 Det + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1 CnjCoo) (2C N) ;
-REMOVE:r_na_7_mp A OR PP IF (-1 Det + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1 CnjCoo) (2C N) ;
-REMOVE:r_na_7_fp A OR PP IF (-1 Det + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1 CnjCoo) (2C N) ;
+REMOVE A OR PP IF (-1 Det + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1 CnjCoo) (2C N) ;
+REMOVE A OR PP IF (-1 Det + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1 CnjCoo) (2C N) ;
+REMOVE A OR PP IF (-1 Det + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1 CnjCoo) (2C N) ;
+REMOVE A OR PP IF (-1 Det + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1 CnjCoo) (2C N) ;
 ## un químico y profesor
 
-REMOVE:r_na_10_ms A OR PP IF (-1 Det + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1 CnjCoo) (2 Noun_Adj_PP LINK 0 N OR NP) (3 Barrera_Final_SN) ;
-REMOVE:r_na_10_fs A OR PP IF (-1 Det + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1 CnjCoo) (2 Noun_Adj_PP LINK 0 N OR NP) (3 Barrera_Final_SN) ;
-REMOVE:r_na_10_mp A OR PP IF (-1 Det + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1 CnjCoo) (2 Noun_Adj_PP LINK 0 N OR NP) (3 Barrera_Final_SN) ;
-REMOVE:r_na_10_fp A OR PP IF (-1 Det + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1 CnjCoo) (2 Noun_Adj_PP LINK 0 N OR NP) (3 Barrera_Final_SN) ;
+REMOVE A OR PP IF (-1 Det + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1 CnjCoo) (2 Noun_Adj_PP LINK 0 N OR NP) (3 Barrera_Final_SN) ;
+REMOVE A OR PP IF (-1 Det + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1 CnjCoo) (2 Noun_Adj_PP LINK 0 N OR NP) (3 Barrera_Final_SN) ;
+REMOVE A OR PP IF (-1 Det + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1 CnjCoo) (2 Noun_Adj_PP LINK 0 N OR NP) (3 Barrera_Final_SN) ;
+REMOVE A OR PP IF (-1 Det + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1 CnjCoo) (2 Noun_Adj_PP LINK 0 N OR NP) (3 Barrera_Final_SN) ;
 # los italianos y españoles son amplia mayoría
 
-REMOVE:r_na_20_ms A OR PP IF (-1 Det + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1 CnjCoo) (2 Det) (3 Noun_Adj_PP LINK 0 N OR NP) (4 Barrera_Final_SN) ;
-REMOVE:r_na_20_fs A OR PP IF (-1 Det + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1 CnjCoo) (2 Det) (3 Noun_Adj_PP LINK 0 N OR NP) (4 Barrera_Final_SN) ;
-REMOVE:r_na_20_mp A OR PP IF (-1 Det + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1 CnjCoo) (2 Det) (3 Noun_Adj_PP LINK 0 N OR NP) (4 Barrera_Final_SN) ;
-REMOVE:r_na_20_fp A OR PP IF (-1 Det + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1 CnjCoo) (2 Det) (3 Noun_Adj_PP LINK 0 N OR NP) (4 Barrera_Final_SN) ;
+REMOVE A OR PP IF (-1 Det + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1 CnjCoo) (2 Det) (3 Noun_Adj_PP LINK 0 N OR NP) (4 Barrera_Final_SN) ;
+REMOVE A OR PP IF (-1 Det + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1 CnjCoo) (2 Det) (3 Noun_Adj_PP LINK 0 N OR NP) (4 Barrera_Final_SN) ;
+REMOVE A OR PP IF (-1 Det + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1 CnjCoo) (2 Det) (3 Noun_Adj_PP LINK 0 N OR NP) (4 Barrera_Final_SN) ;
+REMOVE A OR PP IF (-1 Det + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1 CnjCoo) (2 Det) (3 Noun_Adj_PP LINK 0 N OR NP) (4 Barrera_Final_SN) ;
 # los italianos y los españoles son amplia mayoría
 
-REMOVE:r_na_11a A OR PP IF (-1 Barrera_Inicial_SN LINK NOT 0 N) (NOT -1 Limite_Barrera_Inicial_SN) (0 Noun_Adj_PP LINK 0 N OR NP) (1 CnjCoo) (2 Noun_Adj_PP LINK 0 N OR NP) (3 Barrera_Final_SN) ;
-REMOVE:r_na_11b A OR PP IF (-1 Barrera_Inicial_SN LINK NOT 0 N) (0 Noun_Adj_PP LINK 0 N OR NP) (1 CnjCoo) (2C N) (3 Barrera_Final_SN) ;
-REMOVE:r_na_11c A OR PP IF (-3 Barrera_Inicial_SN LINK NOT 0 N) (NOT -3 Limite_Barrera_Inicial_SN) (-2 Noun_Adj_PP LINK 0 N OR NP) (-1 CnjCoo) (0 Noun_Adj_PP LINK 0 N OR NP) (1 Barrera_Final_SN) ;
-REMOVE:r_na_11d A OR PP IF (-3 Barrera_Inicial_SN LINK NOT 0 N) (-2C N) (-1 CnjCoo) (0 Noun_Adj_PP LINK 0 N OR NP) (1 Barrera_Final_SN) ;
+REMOVE A OR PP IF (-1 Barrera_Inicial_SN LINK NOT 0 N) (NOT -1 Limite_Barrera_Inicial_SN) (0 Noun_Adj_PP LINK 0 N OR NP) (1 CnjCoo) (2 Noun_Adj_PP LINK 0 N OR NP) (3 Barrera_Final_SN) ;
+REMOVE A OR PP IF (-1 Barrera_Inicial_SN LINK NOT 0 N) (0 Noun_Adj_PP LINK 0 N OR NP) (1 CnjCoo) (2C N) (3 Barrera_Final_SN) ;
+REMOVE A OR PP IF (-3 Barrera_Inicial_SN LINK NOT 0 N) (NOT -3 Limite_Barrera_Inicial_SN) (-2 Noun_Adj_PP LINK 0 N OR NP) (-1 CnjCoo) (0 Noun_Adj_PP LINK 0 N OR NP) (1 Barrera_Final_SN) ;
+REMOVE A OR PP IF (-3 Barrera_Inicial_SN LINK NOT 0 N) (-2C N) (-1 CnjCoo) (0 Noun_Adj_PP LINK 0 N OR NP) (1 Barrera_Final_SN) ;
 # entre comunistas y anarquistas
 
-REMOVE:r_na_112a A OR PP IF (-1 Barrera_Inicial_SN LINK NOT 0 N) (NOT -1 Limite_Barrera_Inicial_SN) (0 Noun_Adj_PP LINK 0 N OR NP) (1 CM) (2 Noun_Adj_PP LINK 0 N OR NP) (3 CnjCoo) (4 Noun_Adj_PP LINK 0 N OR NP) (5 Barrera_Final_SN) ;
+REMOVE A OR PP IF (-1 Barrera_Inicial_SN LINK NOT 0 N) (NOT -1 Limite_Barrera_Inicial_SN) (0 Noun_Adj_PP LINK 0 N OR NP) (1 CM) (2 Noun_Adj_PP LINK 0 N OR NP) (3 CnjCoo) (4 Noun_Adj_PP LINK 0 N OR NP) (5 Barrera_Final_SN) ;
 # entre catalanes, vascos y gallegos
 
-REMOVE:r_na_112a A OR PP IF (-1 Barrera_Inicial_SN LINK NOT 0 N) (NOT -1 Limite_Barrera_Inicial_SN) (0 Noun_Adj_PP LINK 0 N OR NP) (1 CM) (2 Noun_Adj_PP LINK 0 N OR NP) (3 CM) (4 Noun_Adj_PP LINK 0 N OR NP) (5 CnjCoo) (6 Noun_Adj_PP LINK 0 N OR NP) (7 Barrera_Final_SN) ;
+REMOVE A OR PP IF (-1 Barrera_Inicial_SN LINK NOT 0 N) (NOT -1 Limite_Barrera_Inicial_SN) (0 Noun_Adj_PP LINK 0 N OR NP) (1 CM) (2 Noun_Adj_PP LINK 0 N OR NP) (3 CM) (4 Noun_Adj_PP LINK 0 N OR NP) (5 CnjCoo) (6 Noun_Adj_PP LINK 0 N OR NP) (7 Barrera_Final_SN) ;
 # entre occitanos, catalanes, vascos y gallegos
 # vinieron italianos, alemanes, polacos y ucranianos.
 
-SELECT:n_a_eos_3 N IF (-2C N) (-1 CnjCoo) (0 Noun_Adj_PP LINK NOT 0 NP) (1 Barrera_Final_Estrict_SN) ;
+SELECT N IF (-2C N) (-1 CnjCoo) (0 Noun_Adj_PP LINK NOT 0 NP) (1 Barrera_Final_Estrict_SN) ;
 ## adquiriendo una gran reputación como poeta y crítico.
-SELECT:n_a_eos_4 N IF (2C N) (1 CnjCoo) (0C Noun_Adj_PP LINK NOT 0 NP) (-1 Barrera_Inicial_SN) ;
+SELECT N IF (2C N) (1 CnjCoo) (0C Noun_Adj_PP LINK NOT 0 NP) (-1 Barrera_Inicial_SN) ;
 ## "se utiliza en periódicos y libros"
 
 # NOM, NOM CONJ NOM
 
-SELECT:s_na_2n N IF (-2C N) (-1 CM) (0 Noun_Adj_PP) (1 CnjCoo) (2 Noun_Adj_PP) ; 
-SELECT:s_na_3n N IF (-3 CM) (-2C N) (-1 CnjCoo) (0 Noun_Adj_PP) (NOT 1 A) ; 
-SELECT:s_na_4n N IF (0 Noun_Adj_PP) (1 CM) (2C N) (1 CnjCoo) (2 Noun_Adj_PP) ; 
+SELECT N IF (-2C N) (-1 CM) (0 Noun_Adj_PP) (1 CnjCoo) (2 Noun_Adj_PP) ; 
+SELECT N IF (-3 CM) (-2C N) (-1 CnjCoo) (0 Noun_Adj_PP) (NOT 1 A) ; 
+SELECT N IF (0 Noun_Adj_PP) (1 CM) (2C N) (1 CnjCoo) (2 Noun_Adj_PP) ; 
 # compositor, teórico y pedagogo
 # varios religiosos, pensadores y políticos
 
-SELECT:s_na_5n N IF (-2 N) (-1 CM) (0 Noun_Adj_PP) (1 CnjCoo) (2C N) ; 
-SELECT:s_na_6n N IF (-2C N) (-1 CM) (0 Noun_Adj_PP) (1 CnjCoo) (2 Det) (3 N) ; 
+SELECT N IF (-2 N) (-1 CM) (0 Noun_Adj_PP) (1 CnjCoo) (2C N) ; 
+SELECT N IF (-2C N) (-1 CM) (0 Noun_Adj_PP) (1 CnjCoo) (2 Det) (3 N) ; 
 # Dificil tratar a la vez:
 # ". Católicos, ortodoxos y algunos anglicanos consideran"
 # "Se encuentra en latín, polaco, lituano y otras lenguas."
 
 # ADJ, ADJ CONJ ADJ
 
-SELECT:s_na_2a A IF (-2C A) (-1 CM) (0 Noun_Adj_PP) (1 CnjCoo) (2 Noun_Adj_PP) ; 
-SELECT:s_na_3a A IF (-3 CM) (-2C A) (-1 CnjCoo) (0 Noun_Adj_PP) (NOT 1 N) ; 
-SELECT:s_na_4a A IF (0 Noun_Adj_PP) (1 CM) (2C A) (1 CnjCoo) (2 Noun_Adj_PP) ; 
+SELECT A IF (-2C A) (-1 CM) (0 Noun_Adj_PP) (1 CnjCoo) (2 Noun_Adj_PP) ; 
+SELECT A IF (-3 CM) (-2C A) (-1 CnjCoo) (0 Noun_Adj_PP) (NOT 1 N) ; 
+SELECT A IF (0 Noun_Adj_PP) (1 CM) (2C A) (1 CnjCoo) (2 Noun_Adj_PP) ; 
 # rojo, verde y azul
 
 # NOM, NOM,
 
-SELECT:s_ncnc1 N IF (-2C N) (-1 CM) (0 Noun_Adj_PP LINK NOT 0 NP) (1 CM OR CnjCoo) ;
-SELECT:s_ncnc2 N IF (-4 Det) (-3C N) (-2 CM) (-1 Det) (0 Noun_Adj_PP LINK NOT 0 NP) (1 CM OR CnjCoo) ;
+SELECT N IF (-2C N) (-1 CM) (0 Noun_Adj_PP LINK NOT 0 NP) (1 CM OR CnjCoo) ;
+SELECT N IF (-4 Det) (-3C N) (-2 CM) (-1 Det) (0 Noun_Adj_PP LINK NOT 0 NP) (1 CM OR CnjCoo) ;
 
 # ADJ, ADJ,
 
-SELECT:s_nana A IF (-2C A) (-1 CM) (0 Noun_Adj_PP LINK NOT 0 NP) (1 CM OR CnjCoo) ;
+SELECT A IF (-2C A) (-1 CM) (0 Noun_Adj_PP LINK NOT 0 NP) (1 CM OR CnjCoo) ;
 
 # DET NOM CONJ DET NOM
 
-REMOVE:r_na_8_ms_ms A OR PP IF (-1 Det + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1 CnjCoo) (2 Det + $$MascSg2) (3 Noun_Adj_PP + $$MascSg2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
+REMOVE A OR PP IF (-1 Det + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1 CnjCoo) (2 Det + MascSg2) (3 Noun_Adj_PP + MascSg2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
 
-REMOVE:r_na_8_ms_fs A OR PP IF (-1 Det + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1 CnjCoo) (2 Det + $$FemSg2) (3 Noun_Adj_PP + $$FemSg2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
-REMOVE:r_na_8_ms_mp A OR PP IF (-1 Det + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1 CnjCoo) (2 Det + $$MascPl2) (3 Noun_Adj_PP + $$MascPl2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
-REMOVE:r_na_8_ms_fp A OR PP IF (-1 Det + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1 CnjCoo) (2 Det + $$FemPl2) (3 Noun_Adj_PP + $$FemPl2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
-	REMOVE:r_na_8_fs_ms A OR PP IF (-1 Det + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1 CnjCoo) (2 Det + $$MascSg2) (3 Noun_Adj_PP + $$MascSg2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
-	REMOVE:r_na_8_fs_fs A OR PP IF (-1 Det + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1 CnjCoo) (2 Det + $$FemSg2) (3 Noun_Adj_PP + $$FemSg2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
-	REMOVE:r_na_8_fs_mp A OR PP IF (-1 Det + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1 CnjCoo) (2 Det + $$MascPl2) (3 Noun_Adj_PP + $$MascPl2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
-	REMOVE:r_na_8_fs_fp A OR PP IF (-1 Det + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1 CnjCoo) (2 Det + $$FemPl2) (3 Noun_Adj_PP + $$FemPl2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
-	REMOVE:r_na_8_mp_ms A OR PP IF (-1 Det + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1 CnjCoo) (2 Det + $$MascSg2) (3 Noun_Adj_PP + $$MascSg2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
-	REMOVE:r_na_8_mp_fs A OR PP IF (-1 Det + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1 CnjCoo) (2 Det + $$FemSg2) (3 Noun_Adj_PP + $$FemSg2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
-	REMOVE:r_na_8_mp_mp A OR PP IF (-1 Det + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1 CnjCoo) (2 Det + $$MascPl2) (3 Noun_Adj_PP + $$MascPl2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
-	REMOVE:r_na_8_mp_fp A OR PP IF (-1 Det + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1 CnjCoo) (2 Det + $$FemPl2) (3 Noun_Adj_PP + $$FemPl2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
-	REMOVE:r_na_8_fp_ms A OR PP IF (-1 Det + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1 CnjCoo) (2 Det + $$MascSg2) (3 Noun_Adj_PP + $$MascSg2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
-	REMOVE:r_na_8_fp_fs A OR PP IF (-1 Det + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1 CnjCoo) (2 Det + $$FemSg2) (3 Noun_Adj_PP + $$FemSg2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
-	REMOVE:r_na_8_fp_mp A OR PP IF (-1 Det + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1 CnjCoo) (2 Det + $$MascPl2) (3 Noun_Adj_PP + $$MascPl2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
-REMOVE:r_na_8_fp_fp A OR PP IF (-1 Det + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1 CnjCoo) (2 Det + $$FemPl2) (3 Noun_Adj_PP + $$FemPl2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
+REMOVE A OR PP IF (-1 Det + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1 CnjCoo) (2 Det + FemSg2) (3 Noun_Adj_PP + FemSg2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
+REMOVE A OR PP IF (-1 Det + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1 CnjCoo) (2 Det + MascPl2) (3 Noun_Adj_PP + MascPl2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
+REMOVE A OR PP IF (-1 Det + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1 CnjCoo) (2 Det + FemPl2) (3 Noun_Adj_PP + FemPl2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
+	REMOVE A OR PP IF (-1 Det + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1 CnjCoo) (2 Det + MascSg2) (3 Noun_Adj_PP + MascSg2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
+	REMOVE A OR PP IF (-1 Det + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1 CnjCoo) (2 Det + FemSg2) (3 Noun_Adj_PP + FemSg2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
+	REMOVE A OR PP IF (-1 Det + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1 CnjCoo) (2 Det + MascPl2) (3 Noun_Adj_PP + MascPl2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
+	REMOVE A OR PP IF (-1 Det + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1 CnjCoo) (2 Det + FemPl2) (3 Noun_Adj_PP + FemPl2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
+	REMOVE A OR PP IF (-1 Det + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1 CnjCoo) (2 Det + MascSg2) (3 Noun_Adj_PP + MascSg2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
+	REMOVE A OR PP IF (-1 Det + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1 CnjCoo) (2 Det + FemSg2) (3 Noun_Adj_PP + FemSg2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
+	REMOVE A OR PP IF (-1 Det + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1 CnjCoo) (2 Det + MascPl2) (3 Noun_Adj_PP + MascPl2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
+	REMOVE A OR PP IF (-1 Det + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1 CnjCoo) (2 Det + FemPl2) (3 Noun_Adj_PP + FemPl2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
+	REMOVE A OR PP IF (-1 Det + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1 CnjCoo) (2 Det + MascSg2) (3 Noun_Adj_PP + MascSg2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
+	REMOVE A OR PP IF (-1 Det + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1 CnjCoo) (2 Det + FemSg2) (3 Noun_Adj_PP + FemSg2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
+	REMOVE A OR PP IF (-1 Det + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1 CnjCoo) (2 Det + MascPl2) (3 Noun_Adj_PP + MascPl2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
+REMOVE A OR PP IF (-1 Det + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1 CnjCoo) (2 Det + FemPl2) (3 Noun_Adj_PP + FemPl2 LINK 0 N OR NP) (4 Barrera_Final_SN) ;
 # los niños y las niñas
 # la aeronáutica y la astronáutica
 
 # DET NOM, DET NOM
 
-REMOVE:r_na_9_ms_ms A OR PP IF (-1 Det + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1 CM) (2 Det + $$MascSg2) (3C N + $$MascSg2) ;
-REMOVE:r_na_9_ms_fs A OR PP IF (-1 Det + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1 CM) (2 Det + $$FemSg2) (3C N + $$FemSg2) ;
-REMOVE:r_na_9_ms_mp A OR PP IF (-1 Det + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1 CM) (2 Det + $$MascPl2) (3C N + $$MascPl2) ;
-REMOVE:r_na_9_ms_fp A OR PP IF (-1 Det + $$MascSg) (0 Noun_Adj_PP + $$MascSg LINK 0 N OR NP) (1 CM) (2 Det + $$FemPl2) (3C N + $$FemPl2) ;
-REMOVE:r_na_9_fs_ms A OR PP IF (-1 Det + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1 CM) (2 Det + $$MascSg2) (3C N + $$MascSg2) ;
-REMOVE:r_na_9_fs_fs A OR PP IF (-1 Det + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1 CM) (2 Det + $$FemSg2) (3C N + $$FemSg2) ;
-REMOVE:r_na_9_fs_mp A OR PP IF (-1 Det + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1 CM) (2 Det + $$MascPl2) (3C N + $$MascPl2) ;
-REMOVE:r_na_9_fs_fp A OR PP IF (-1 Det + $$FemSg) (0 Noun_Adj_PP + $$FemSg LINK 0 N OR NP) (1 CM) (2 Det + $$FemPl2) (3C N + $$FemPl2) ;
-REMOVE:r_na_9_mp_ms A OR PP IF (-1 Det + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1 CM) (2 Det + $$MascSg2) (3C N + $$MascSg2) ;
-REMOVE:r_na_9_mp_fs A OR PP IF (-1 Det + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1 CM) (2 Det + $$FemSg2) (3C N + $$FemSg2) ;
-REMOVE:r_na_9_mp_mp A OR PP IF (-1 Det + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1 CM) (2 Det + $$MascPl2) (3C N + $$MascPl2) ;
-REMOVE:r_na_9_mp_fp A OR PP IF (-1 Det + $$MascPl) (0 Noun_Adj_PP + $$MascPl LINK 0 N OR NP) (1 CM) (2 Det + $$FemPl2) (3C N + $$FemPl2) ;
-REMOVE:r_na_9_fp_ms A OR PP IF (-1 Det + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1 CM) (2 Det + $$MascSg2) (3C N + $$MascSg2) ;
-REMOVE:r_na_9_fp_fs A OR PP IF (-1 Det + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1 CM) (2 Det + $$FemSg2) (3C N + $$FemSg2) ;
-REMOVE:r_na_9_fp_mp A OR PP IF (-1 Det + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1 CM) (2 Det + $$MascPl2) (3C N + $$MascPl2) ;
-REMOVE:r_na_9_fp_fp A OR PP IF (-1 Det + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 0 N OR NP) (1 CM) (2 Det + $$FemPl2) (3C N + $$FemPl2) ;
+REMOVE A OR PP IF (-1 Det + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1 CM) (2 Det + MascSg2) (3C N + MascSg2) ;
+REMOVE A OR PP IF (-1 Det + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1 CM) (2 Det + FemSg2) (3C N + FemSg2) ;
+REMOVE A OR PP IF (-1 Det + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1 CM) (2 Det + MascPl2) (3C N + MascPl2) ;
+REMOVE A OR PP IF (-1 Det + MascSg) (0 Noun_Adj_PP + MascSg LINK 0 N OR NP) (1 CM) (2 Det + FemPl2) (3C N + FemPl2) ;
+REMOVE A OR PP IF (-1 Det + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1 CM) (2 Det + MascSg2) (3C N + MascSg2) ;
+REMOVE A OR PP IF (-1 Det + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1 CM) (2 Det + FemSg2) (3C N + FemSg2) ;
+REMOVE A OR PP IF (-1 Det + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1 CM) (2 Det + MascPl2) (3C N + MascPl2) ;
+REMOVE A OR PP IF (-1 Det + FemSg) (0 Noun_Adj_PP + FemSg LINK 0 N OR NP) (1 CM) (2 Det + FemPl2) (3C N + FemPl2) ;
+REMOVE A OR PP IF (-1 Det + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1 CM) (2 Det + MascSg2) (3C N + MascSg2) ;
+REMOVE A OR PP IF (-1 Det + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1 CM) (2 Det + FemSg2) (3C N + FemSg2) ;
+REMOVE A OR PP IF (-1 Det + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1 CM) (2 Det + MascPl2) (3C N + MascPl2) ;
+REMOVE A OR PP IF (-1 Det + MascPl) (0 Noun_Adj_PP + MascPl LINK 0 N OR NP) (1 CM) (2 Det + FemPl2) (3C N + FemPl2) ;
+REMOVE A OR PP IF (-1 Det + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1 CM) (2 Det + MascSg2) (3C N + MascSg2) ;
+REMOVE A OR PP IF (-1 Det + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1 CM) (2 Det + FemSg2) (3C N + FemSg2) ;
+REMOVE A OR PP IF (-1 Det + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1 CM) (2 Det + MascPl2) (3C N + MascPl2) ;
+REMOVE A OR PP IF (-1 Det + FemPl) (0 Noun_Adj_PP + FemPl LINK 0 N OR NP) (1 CM) (2 Det + FemPl2) (3C N + FemPl2) ;
 # vinieron los italianos, los alemanes, los polacos y los ucranianos.
 
 #### final clasificación
@@ -678,7 +860,12 @@ REMOVE:r_na_9_fp_fp A OR PP IF (-1 Det + $$FemPl) (0 Noun_Adj_PP + $$FemPl LINK 
 	# Cat (Caitlin), lesbiana sin
 	# adj_pp: "un trípode pesado con miras"
 
-# REMOVE:r_na_20 A OR PP IF (-1 Barrera_Inicial_SN LINK NOT 0 N) (NOT -1 Limite_Barrera_Inicial_SN) (0 Noun_Adj_PP LINK 0 N OR NP) (1 Barrera_Final_SN) ;
+# REMOVE A OR PP IF (-1 Barrera_Inicial_SN LINK NOT 0 N) (NOT -1 Limite_Barrera_Inicial_SN) (0 Noun_Adj_PP LINK 0 N OR NP) (1 Barrera_Final_SN) ;
+
+SELECT Prep IF (-1 Rel) (0 ("<durant>")) ;
+	# on durant anys, quan durant anys
+SELECT Prep IF (0 ("durant")) (1 Det) ;
+	# de Catalunya durant el segle XII
 
 SELECT Prep IF (-1 >>>) (0 ("segons")) ;
 	# segons ell
@@ -693,6 +880,8 @@ SELECT Prep IF (-1C N) (0 ("sobre")) (1 Det) ;
 SELECT Vblex IF (-1C ("no")) (0 ("porta")) (1 ("cap")) ;
 SELECT Det IF (-2C ("no")) (-1 Vblex) (0 ("cap")) (1C N) ;
 	# no porta cap indicació
+SELECT Det IF (-2C ("no")) (-1 Vblex) (0 ("cap")) (1C N OR Inf) ;
+	# no tenien cap poder ni estatus social
 
 SELECT Pron IF (-4 ("no")) (-3 ("en")) (-2 Vbmod) (-1 Inf) (0 ("cap")) ;
 	# no en pot portar cap
@@ -701,6 +890,59 @@ SELECT N IF (-1 Det) (0 ("cap")) (1 PP OR A) ;
 	# un cap blanc
 SELECT N IF (-1 ("com a")) (0 ("cap")) ;
 	# ha estat designat com a cap de les famílies
+SELECT Fem IF (-3 ("ser") OR ("estar")) (-2 PP + Fem) (-1 ("com a")) (0 ("cap")) (1C Prep) ;
+	# va ser designada com a cap de
+SELECT Masc IF (NOT -2 PP + Fem) (-1C Prep) (0 ("cap")) (1C Prep) (NOT 2 Det + Pl) ;
+	# Aristòtil va ser designat com a cap de la reial acadèmia
+
+SELECT Det IF (0 ("cap")) (1C N) ;
+#SELECT Det IF (-1 Barrera_Inicial_Estrict_SN) (0 ("cap")) (1C N) ;
+	# sense cap indicació
+SELECT Pron IF (-1 Prep) (0 ("cap")) (1 ("de")) (2 Det + Pl) ;
+SELECT Pron IF (-1 Prep) (0 ("cap")) (1 ("de")) (1/* Det + Pl) ;
+	# de cap d'aquestes indicacions
+	# amb cap de les formes
+SELECT Pron IF (NOT -1 Det) (NOT -1 Ser) (0 ("<cap>")) (1 ("de")) (2 Det + Pl) ;
+SELECT Pron IF (NOT -1 Det) (NOT -1 Ser) (0 ("<cap>")) (1 ("de")) (1/* Det + Pl) ;
+	# cap dels meus amics
+	# cap de les meves amigues
+	# però: és cap dels mossos d'esquadre
+SELECT Pron IF (-2 ("no")) (-1 Ser) (0 ("<cap>")) (1 ("de")) (2 Det + Pl) ;
+SELECT Pron IF (-2 ("no")) (-1 Ser) (0 ("<cap>")) (1 ("de")) (1/* Det + Pl) ;
+	# no és cap dels meus amics
+	# no és cap de les meves amigues
+SELECT Det IF (-1 CnjSub) (0 ("cap")) (1C N) ;
+	# pensa que cap indicació
+SELECT Det IF (-1 CnjSub) (0 ("cap")) (1C A) (2C N) ;
+	# pensa que cap bona indicació
+SELECT Det IF (-1C Verb) (0 ("cap")) (1C N) ;
+SELECT Det IF (-1C Verb) (0 ("cap")) (1C A) (2C N) ;
+	# no va aconseguir cap conquesta territorial
+SELECT Det IF (-1C Verb) (0 ("cap")) (1 N) (2 Barrera_Final_Estrict_SN) ;
+SELECT Det IF (-1C Verb) (0 ("cap")) (1 A) (1 N) (3 Barrera_Final_Estrict_SN) ;
+SELECT Det IF (-1C Verb) (0 ("cap")) (1 N) (1 A) (3 Barrera_Final_Estrict_SN) ;
+	# no hi ha cap dubte que
+SELECT Det IF (-2C Verb) (-1 Adv) (0 ("cap")) (1C N) ;
+SELECT Det IF (-2C Verb) (-1 Adv) (0 ("cap")) (1C A) (2C N) ;
+	# no hi ha pràcticament cap menció
+SELECT Det IF (-2C Verb) (-1 Adv) (0 ("cap")) (1 N) (2 Barrera_Final_Estrict_SN) ;
+SELECT Det IF (-2C Verb) (-1 Adv) (0 ("cap")) (1 A) (1 N) (3 Barrera_Final_Estrict_SN) ;
+SELECT Det IF (-2C Verb) (-1 Adv) (0 ("cap")) (1 N) (1 A) (3 Barrera_Final_Estrict_SN) ;
+	# no hi ha pràcticament cap dubte que
+SELECT Pron IF (NOT -1 Det OR A) (0 ("cap")) (1C Verb) ;
+	# però cap ha estat acceptada
+
+SELECT PreAdv IF (-1 Ser) (0 ("molt")) (1C A OR PP) ;
+	# és molt variat
+SELECT PreAdv IF (-1 Ser) (0 ("molt")) (1C Adv) ;
+	# és molt a prop
+SELECT PreAdv IF (-1C N) (0 ("molt")) (1C Adv) ;
+SELECT PreAdv IF (-2 N) (-1 A) (0 ("molt")) (1C Adv) ;
+	# un museu molt a prop
+SELECT PreAdv IF (-1C N) (0 ("molt")) (1C A OR PP) ;
+SELECT PreAdv IF (-2C N) (-1 A) (0 ("molt")) (1C A OR PP) ;
+SELECT PreAdv IF (-2 N) (-1C A) (0 ("molt")) (1C A OR PP) ;
+	# una oferta educativa molt àmplia
 
 SELECT PP IF (-1 Ser) (0 ("conegut")) ;
 	# són conegudes principalment a través de
@@ -728,9 +970,46 @@ SELECT Vblex IF (0 ("parla")) (0 Vblex OR N) (NOT -1 Det) (NOT 1 A + Fem) ;
 SELECT PP IF (0 ("<passada>")) (1 Det + FemSg) (2 N + FemSg) ;
 	# fins passada la nit
 
-SELECT Num IF (0 ("I")) (-1 Ant) (NOT 1 Cog OR Ant) ;
+REMOVE CnjCoo IF (0 ("<I>")) (-1 Ant) (NOT 1 Cog OR Ant) ;
+REMOVE N IF (0 ("<V>")) (-1 Ant) (NOT 1 Cog OR Ant) ;
+REMOVE N IF (0 ("<VI>")) (-1 Ant) (NOT 1 Cog OR Ant) ;
+REMOVE N IF (0 ("<X>")) (-1 Ant) (NOT 1 Cog OR Ant) ;
+SELECT A IF (0 segles_num_romans) (0C A OR Num) (-1 Ant) (NOT 1 Cog OR Ant) ;
 	# Pere I el Catòlic
 	# Pere i Joan
+REMOVE CnjCoo IF (0 ("<I>")) (-1 unknownMajIni) ;
+REMOVE N IF (0 ("<V>")) (-1 unknownMajIni) ;
+REMOVE N IF (0 ("<VI>")) (-1 unknownMajIni) ;
+REMOVE N IF (0 ("<X>")) (-1 unknownMajIni) ;
+SELECT A IF (0 segles_num_romans) (0C A OR Num) (-1 unknownMajIni) ;
+	# NomEstrany I
+REMOVE N IF (0 ("<V>")) (1 CnjCoo) (2 Num) ;
+REMOVE N IF (0 ("<VI>")) (1 CnjCoo) (2 Num) ;
+REMOVE N IF (0 ("<X>")) (1 CnjCoo) (2 Num) ;
+REMOVE N IF (0 ("<V>")) (-1 CnjCoo) (-2 Num) ;
+REMOVE N IF (0 ("<VI>")) (-1 CnjCoo) (-2 Num) ;
+REMOVE N IF (0 ("<X>")) (-1 CnjCoo) (-2 Num) ;
+	# V i VI
+SELECT A IF (-1 Det + Def + MascSg) (0 ("<I>")) (1C N + MascSg) ;
+SELECT A IF (-1 Det + Def + FemSg) (0 ("<I>")) (1C N + FemSg) ;
+SELECT A IF (-1 Det + Def + MascSg) (0 ("<V>")) (1C N + MascSg) ;
+SELECT A IF (-1 Det + Def + FemSg) (0 ("<V>")) (1C N + FemSg) ;
+SELECT A IF (-1 Det + Def + MascSg) (0 ("<VI>")) (1C N + MascSg) ;
+SELECT A IF (-1 Det + Def + FemSg) (0 ("<VI>")) (1C N + FemSg) ;
+SELECT A IF (-1 Det + Def + MascSg) (0 ("<X>")) (1C N + MascSg) ;
+SELECT A IF (-1 Det + Def + FemSg) (0 ("<X>")) (1C N + FemSg) ;
+SELECT A IF (-1 Det + Def + MascSg) (0 segles_num_romans) (0C A OR Num) (1C N + MascSg) ;
+SELECT A IF (-1 Det + Def + FemSg) (0 segles_num_romans) (0C A OR Num) (1C N + FemSg) ;
+	# la I República
+SELECT A IF (0 ("<I>")) (-1 ("segle") OR ("mil·lenni") OR ("any") OR ("mes") OR ("setmana") OR ("dia")) ;
+SELECT A IF (0 ("<V>")) (-1 ("segle") OR ("mil·lenni") OR ("any") OR ("mes") OR ("setmana") OR ("dia")) ;
+SELECT A IF (0 ("<VI>")) (-1 ("segle") OR ("mil·lenni") OR ("any") OR ("mes") OR ("setmana") OR ("dia")) ;
+SELECT A IF (0 ("<X>")) (-1 ("segle") OR ("mil·lenni") OR ("any") OR ("mes") OR ("setmana") OR ("dia")) ;
+#SELECT A IF (0 segles_num_romans) (0C A OR Num) (-1 ("segle") OR ("mil·lenni") OR ("any") OR ("mes") OR ("setmana") OR ("dia")) ;
+SELECT A IF (0 segles_num_romans) (-1 ("segle") OR ("mil·lenni") OR ("any") OR ("mes") OR ("setmana") OR ("dia")) ;
+	# el segle I
+SELECT N IF (0 ("<C>")) (-1 Num) ;
+	# 100°C
 
 SELECT Masc IF (0 ("final")) (-1 Prep) ;
 	# a finals de, de finals de
@@ -758,7 +1037,8 @@ SELECT CnjAdv IF (-1 ("de")) (0 ("si")) (1 Vbmod) (1 P1 OR P2 OR P3) ;
 	# depenent de si volen menjar
 
 SELECT Prep (0 ("entre")) (1 PreDet OR Det OR Num OR N OR NP OR Tn OR Inf OR Rel OR unknown OR A) ;
-SELECT Prep (0 ("entre")) (1 ("el que") OR ("el qual")) ;
+SELECT Prep (0 ("entre")) (1 ("el que") OR ("el qual") OR ("<altres>")) ;
+SELECT Prep (0 ("entre")) (1 ("de")) (2 ("<altres>")) ;
 SELECT Prep (0 ("sobre")) (1 PreDet OR Det OR Num OR N OR NP OR Tn OR Inf OR Itg OR unknown) ;
 SELECT Prep (0 ("sobre")) (1 ("el que") OR ("el qual")) ;		# sobre el que diu en Joan
 SELECT Prep (0 ("entre")) (1 ("<fa>")) ;				# el Cretaci superior, entre fa 77 i fa 74 milions d'anys
@@ -768,3 +1048,9 @@ SELECT Ger (-1C N) (OC ("<ensenyant>")) (1 ("en") OR ("a"))  ;	# va escampar els
 
 SELECT A (-1 Ser) (0 ("divertit")) ;
 SELECT A (-2 Ser) (-1 PreAdv) (0 ("divertit")) ;
+SELECT PreAdv (-1 Ser OR Estar OR ("tornar") OR ("esdevenir")) (0 ("força")) (1 A) ;
+SELECT PreAdv (-1 Ser OR Estar OR ("tornar") OR ("esdevenir")) (0 ("massa")) (1 A) ;
+
+SELECT Adv (-1C V) (0 ("<junts>")) ;
+	# vénen junts
+SELECT Adv (-2C V) (-1 ("tot")) (0 ("<junts>")) ;
