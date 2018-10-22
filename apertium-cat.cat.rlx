@@ -12,6 +12,7 @@ LIST N = (n) ;
 LIST NP = (np) ;
 LIST A = (adj) ;
 LIST Pos = (pos) ;
+LIST Ord = (ord) ;
 LIST Det = (det) ;
 LIST PreDet = (predet) ;
 LIST Num = (num) ;
@@ -34,12 +35,15 @@ SET Rpar = (rpar) ;
 
 LIST unknown = ("\\*.*"r) ;
 LIST unknownMajIni = ("\\*[A-ZÀÁÈÉíÒÓÚÜÇ].*"r) ;
+LIST MajIni = ("<[A-ZÀÁÈÉíÒÓÚÜÇ].*>"r) ;
+LIST MinIni = ("<[a-zàáèéìíòóùúçñ].*>"r) ;
 LIST segles_num_romans = ("[IVX][IVX]*"r) ;
 
 SET CM = (cm) OR (lpar) OR (rpar) OR ("<;>") ;
 LIST Excl = "!" ;
 
 SET Verb = Vblex OR Vbmod OR Vbhaver OR Copula ;
+SET Cnj = CnjCoo OR CnjSub OR CnjAdv ;
 
 SET V = Vblex + Vbmod + Vbhaver + Copula ;
 SET Word = N + NP + A + Det + PreAdv + Adv + V + Pron + Prep + CnjCoo + CnjSub + CnjAdv + Rel + Interj ;
@@ -92,6 +96,7 @@ SET Ant = (np ant) ;
 SET Cog = (np cog) ;
 SET Ant_Cog = Ant OR Cog ;
 SET Top = (np top) OR (np loc) ;
+SET Al = (al) ;
 
 SET DetDef = (det def) ;
 SET DetInd = (det ind) ;
@@ -109,6 +114,7 @@ SET Cnj_Rel = CnjCoo OR CnjSub OR CnjAdv OR Rel ;
 SET Cnj_Rel_End = >>> OR CnjCoo OR CnjSub OR CnjAdv OR Rel OR Inf;
 
 SET Trencat = ("terç") OR ("quart") OR ("cinquè") OR ("quint") OR ("sisè") OR ("setè") OR ("vuitè") OR ("novè") ;
+SET Ordinal = ("primer") OR ("segon") OR ("tercer") OR ("quart") OR ("cinquè") OR ("quint") OR ("sisè") OR ("setè") OR ("vuitè") OR ("novè") OR ("últim") OR ("darrer") OR (Ord) ;
 
 SET Llocs = ("riu") OR ("mar") OR ("oceà") OR ("muntanya") OR ("serra") OR ("serralada") OR ("cordillera") OR ("carena")
 	OR ("carrer") OR ("parc") OR ("plaça") OR ("avinguda") OR ("ciutat") OR ("vila") OR ("poble") OR ("capital") ;
@@ -117,6 +123,9 @@ SET Persones = ("pare") OR ("mare") OR ("avi") OR ("germà") OR ("fill") OR ("on
 #SET Persones2 = ("pare") ("mare") ("avi") ;
 SET Dignitat = ("president") OR ("governador") OR ("emperador") OR ("rei") OR ("príncep") OR ("comte") OR ("marquès") OR ("duc")
 	OR ("arxiduc") OR ("infant") OR ("bisbe") ;
+
+# adj que són ambiguts amb el pp de verbs intransitius
+SET PP_Intr_Adj = ("controvertit") ;
 
 SET Barrera_Final_SN = <<< OR Prep OR Det OR CnjSub OR CnjAdv OR Verb OR Rel OR Pro ;	# Verb és perillós per la ambigüitat, però en general, prolífic
 SET Barrera_Final_Estrict_SN = <<< OR Prep OR Det OR CnjSub OR CnjAdv OR Rel OR Pro ;
@@ -150,11 +159,16 @@ LIST Faig = "faig" ;
 LIST VSer = "ser" ;
 LIST Pobla = "pobla" ;
 LIST Poble = "poble" ;
+LIST Tens = "tens" ;
+LIST Tenir = "tenir" ;
 LIST Turquesa = "turquesa" ;
 LIST Turques = "turquès" ;
-LIST Turques = "turquès" ;
-LIST Turques = "turquès" ;
 LIST Ponent = "ponent" ;
+LIST Encara = "encara" ;
+LIST Encarar = "encarar" ;
+LIST Primer = "primer" ;
+LIST Promes = "promès" ;
+LIST Promesa = "promesa" ;
 
 SET Ser = ("ser") OR ("Ser") ;
 SET Estar = ("estar") OR ("Estar");
@@ -178,10 +192,10 @@ SET Com = ("com") OR ("Com") ;
 LIST Li = "li" ;
 
 # adjetivos ambíguos que sólo pueden anteceder el nombre ("gran" o "buen" no son ambiguos)
-SET PreAdj = ("mal") OR ("Mal") ;
+SET PreAdj = ("mal") OR ("força") ;
 
 # adjetivos ambiguos que se anteponen a menudo
-SET AdjPrefAmb = ("gran") OR ("petit") OR ("nou") OR ("antic") OR ("menor") OR ("major") OR ("doble") OR ("triple") OR ("possible") OR ("suposat") OR ("presumpte") ;
+SET AdjPrefAmb = ("gran") OR ("petit") OR ("nou") OR ("antic") OR ("menor") OR ("major") OR ("doble") OR ("triple") OR ("possible") OR ("suposat") OR ("presumpte") OR ("altre") ;
 
 # verbs Vblex que típicament impliquen subjuntiu
 SET VerbSubj = ("voler") OR ("desitjar") OR ("proposar") OR ("agradar") OR ("plaure") OR ("exigir") OR ("reclamar") OR ("demanar") OR ("esperar") ;
@@ -189,12 +203,60 @@ SET VerbSubj = ("voler") OR ("desitjar") OR ("proposar") OR ("agradar") OR ("pla
 # verbs Vblex que típicament impliquen indicatiu
 SET VInd = ("considerar") OR ("creure") OR ("opinar") OR ("dir") OR ("sentir") OR ("trobar") OR ("continuar") OR ("mantenir") OR ("resultar") ;
 
+# coincidències nom propi/comú
+SET NomPropiComu = ("Sala") OR ("Guerra") OR ("Costa") OR ("Fons") OR ("Guàrdia");
 
 ###############################################################################
 #  Morphological disambiguation
 #
 
 SECTION
+
+
+# Diacrítics de la nova ortografia IEC 2017
+
+SELECT:dona_v Vblex IF (0 ("donar")) (-1 Pro) (-2 Pro) (NOT -2 ("<en>"i));
+SELECT:dona_v Vblex IF (0 ("<dona>"i)) (-1 Pro) (NOT -1 ("<la>"i)) (NOT -1 ("<en>"i));
+SELECT:dona_v Vblex IF (0 ("<dones>"i)) (-1 Pro) (NOT -1 ("<les>"i)) (NOT -1 ("<en>"i));
+SELECT:dona_n N IF (0 ("dona")) (NOT -1 Cnj);
+
+#SELECT:apellido0 (cog) IF (0 (cog)) (1 ("i"i)) (2 (cog));   # Navarro i García
+#SELECT:apellido1 (cog) IF (0 (cog)) (-1 ("i"i)) (-2 (cog));
+
+# Coincidència nom propi/comú. Ex. Fons Europeu, Guerra Civil...
+REMOVE:nom_propicomu NP IF (0 NomPropiComu) (NOT -1C (ant) OR (cog) OR unknownMajIni); 
+
+REMOVE:marina NP IF (0 ("Marina")) (1 ("reial") OR ("mercant") OR ("britànic")); 
+REMOVE:costa NP IF (0 ("Costa")) (1 ("blau") OR ("brau") OR ("blanc")); 
+REMOVE:li_nonompropi NP IF (0 ("Li")) (1 Verb + Pers) (NOT -1 MinIni) (NOT -1 (ant) OR (cog) OR unknownMajIni); 
+
+# Per a evitar la traducicó de cognoms
+# Posa com a lema la forma de la paraula marcada amb *
+# Amb els adjectius hi ha més risc d'error (!)
+SUBSTITUTE:nom_propi1 (".*"r) ("\\*$1"v) TARGET ("<(.*)>"r) IF (-1C (ant) OR (cog)) (0C Verb OR N OR A) (0 MajIni) (NOT 0 segles_num_romans) (NOT -1 ("Al")) ; 
+REPLACE:nom_propi2 (np) Verb OR N OR A IF (-1C (ant) OR (cog)) (0C Verb OR N OR A) (0 MajIni) (NOT 0 segles_num_romans) (NOT -1 ("Al"));  # Això no sé si és útil. 
+
+#amb sols
+SELECT:sols Adv IF (0 ("sols"i)) (-1 Prep);
+SELECT:seu N IF (0 ("<seu>"i)) (-1 Det + FemSg);
+
+#molt 
+SELECT:molt_adv PreAdv IF (0 ("<molt>"i)) (1 A OR Adv OR PP) (NOT 1 Pron) (NOT 1 Rel) (NOT 1 Itg);
+
+# prep + verb/nom > nom: (ej. dels centres ABC)
+REMOVE:prep_VbN Verb + Pers IF (0 Verb + Pers) (-1C/* Prep) (NOT -1 ("fins"i));
+REMOVE:prep_det_VbN Verb + Pers IF (0 Verb + Pers) (-2C Prep) (-1 Det + MascSg) (0 MascSg); 
+REMOVE:prep_det_VbN Verb + Pers IF (0 Verb + Pers) (-2C Prep) (-1 Det + MascPl) (0 MascPl); 
+REMOVE:prep_det_VbN Verb + Pers IF (0 Verb + Pers) (-2C Prep) (-1 Det + FemSg) (0 FemSg); 
+REMOVE:prep_det_VbN Verb + Pers IF (0 Verb + Pers) (-2C Prep) (-1 Det + FemPl) (0 FemPl); 
+
+REMOVE:verb_maj Vblex IF (NOT -1 >>>) (0 MajIni) (0 Verb + Pers) (0 N); #paraula en majúsucla: és més probablement nom. Gran Via Marqués del Túria. 
+
+SELECT:grau NP IF (0 ("Grau")) (-1/* NP OR unknownMajIni); #Grau nom comú / cognom
+SELECT:grau NP IF (0 ("Grau")) (1/* NP OR unknownMajIni);
+SELECT:grau NP IF (0 ("Grau")) (-1 ("de") OR ("i")) (-2/* NP OR unknownMajIni) (NOT -1/* Det);
+SELECT:grau NP IF (0 ("Grau")) (-1 ("sant"));
+REMOVE:grau NP IF (0 ("Grau"));
 
 REMOVE Cog IF (-1 DetDef) (0 Cog) ;
 REMOVE Cog IF (-1 DetInd) (0 Cog) ;
@@ -207,6 +269,8 @@ SELECT Cog IF (0 Cog OR Ant) (-1C Ant) ;
 SELECT Ant_Cog IF (0 Cog OR Ant) (1C Cog) ;
 SELECT Top IF (-2 Ant) (-1 ("de")) (0 Ant OR Cog OR Top) ;
 	# Hiparc de Nicea
+SELECT Top IF (-3 Ant) (-2 segles_num_romans) (-1 ("de")) (0 Ant OR Cog OR Top) ;
+	# Joan II de Castella
 SELECT Top IF (-2 ("concili") OR ("parlament") OR ("estatut") OR ("constitució") OR ("tractat") OR ("declaració"))
 	(-1 ("de")) (0 Ant OR Cog OR Top) ;
 	# concili de Nicea
@@ -234,8 +298,14 @@ SELECT N IF (0 ("creure") OR ("creu")) (1 ("de")) ;
 
 SELECT N IF (0 ("sant")) (1 NP) ;
 
-SELECT NP IF (0 NP) (NOT -1 >>>) (NOT 0 ("I") OR ("Sol") OR ("Nadal") OR ("Parlament") OR ("Guerra") OR ("Civil") OR ("Reis")) ;
-	# Traiem paraules que, per una raó o altra, es posen en majúscules sense ser NP
+SELECT NP IF (0 NP) (NOT -1 >>>) (NOT 0 ("I") OR ("Sol") OR ("Nadal") OR ("Parlament") OR ("Consell") OR ("Guerra") OR ("Civil") OR ("Reis")) ;
+	# Llevem paraules que, per una raó o altra, es posen en majúscules sense ser NP
+
+SELECT:Consell_top Top IF (0 ("Consell")) (-2 ("ajuntament") OR ("alcalde") OR ("regidor") OR ("municipi") OR ("veí") OR ("batlle")) (-1 ("de"));
+REMOVE:Consell_top Top IF (0 ("Consell"));
+SELECT:Consell_n N IF (0 ("Consell")) (1 A + MascSg);
+SELECT:Consell_n (np al) IF (0 ("Consell")) (0*/* ("Generalitat") OR ("la Generalitat"));
+SELECT:Consell_n N IF (0 ("Consell"));
 
 SELECT N IF (-1 ("<el>")) (0 ("<Sol>")) ;		# el Sol
 SELECT N IF (-1 ("<la>")) (0 ("<Guerra>")) ;		# la Guerra (Mundial, d'Independència, etc.)
@@ -335,6 +405,11 @@ SELECT PRS (*-1 ("ser") LINK 1 Adv_PreAdv LINK 1 A LINK 1 ("que")) (0C Verb) (NO
 REMOVE PIS (0 ("<foren>")) (1 PP) ;
 	# que foren capturats
 
+# adjectiu/nom i gerundi (filtrant, comptant, alternant, impugnant, cantant...)
+# Desactivat perquè és molt més complicat.
+#REMOVE:adj_ger A IF (0 A) (0 Ger) (NOT -1/* Det OR Prep);
+#REMOVE:nom_ger N IF (0 N) (0 Ger) (NOT -1/* Det OR Prep);
+
 #
 # comparaciones
 #
@@ -344,11 +419,39 @@ SELECT PP IF (-1 ("haver") OR ("Haver")) (0 PP) ;
 SELECT PP IF (-1 ("ser") OR ("ser")) (0 PP) (*1 ("por") BARRIER (Cnj_Rel_End)) ;
 
 # seguir, estar + ger
-SELECT Ger IF (-1 ("estar") OR ("Estar") OR ("seguir") OR ("Seguir")) (0 Ger) ;
+SELECT:ger Ger IF (-1 ("estar"i) OR ("seguir"i) OR ("continuar"i) OR ("acabar"i)) (0 Ger) ;
+
 
 #
 # PALABRAS PARTICULARES
 #
+
+SELECT:que PreAdv IF (0 ("que")) (1C A) (NOT 2 N OR A) (NOT 1 ("junt")) (-1 >>>); #(NOT -1 ("més") OR ("menys") OR ("manco")); 
+REMOVE:que PreAdv IF (0 ("que")); #(Excepcions?)
+
+SELECT:pols1 MascSg IF (0 ("<pols>"i)) (-1 MascSg);
+SELECT:pols2 MascSg IF (0 ("<pols>"i)) (1 MascSg);
+SELECT:pols3 MascPl IF (0 ("<pols>"i)) (-1 MascPl);
+SELECT:pols4 MascPl IF (0 ("<pols>"i)) (1 MascPl);
+SELECT:pols0 FemSg IF (0 ("<pols>"i)); # per defecte
+
+REMOVE:concorda_num (f) IF (-2 (det m)) (-1 (num)) (0 (m)) (0 (f)); # els/les tres regnes
+REMOVE:concorda_num (m) IF (-2 (det f)) (-1 (num)) (0 (m)) (0 (f));
+
+SELECT:apartat N IF (0 ("apartat"i)) (1 ("<[a-hj-zA-Z]>"r));
+
+REMOVE:càmera (m) IF (0 ("càmera"i)) (NOT -1 (det m)) (NOT -1 (adj m)) (NOT 1 (adj m)); #si no està determinat és femení
+
+REMOVE:contractes (f) IF (0 ("<contractes>"i)) (NOT -1 (det f)) (NOT -1 (adj f)) (NOT 1 (adj f)) (NOT 1 (vblex pp f)); #si no està determinat és masculí
+REMOVE:quadres    (f) IF (0 ("<quadres>"i)) (NOT -1 (det f)) (NOT -1 (adj f)) (NOT 1 (adj f)) (NOT 1 (vblex pp f)); #si no està determinat és masculí
+
+#ordinales (el tagger no detecta els ordinals)
+SELECT:ordinal A IF (0 (ord) + MascSg) (1 N + MascSg);
+SELECT:ordinal A IF (0 (ord) + MascPl) (1 N + MascPl) (NOT 0 ("segons"i));
+SELECT:ordinal A IF (0 (ord) + FemSg) (1 N + FemSg);
+SELECT:ordinal A IF (0 (ord) + FemPl) (1 N + FemPl);
+
+SELECT:ordinal Det IF (0 Det + MascSg) (1 (ord) + MascSg) (2 N + MascSg); #el quart àlbum >*lo cuarto
 
 SELECT N IF (-1 Det + Masc) (0 ("estat") OR ("Estat")) ;
 SELECT PP IF (-1 Vbhaver) (0 ("estat")) (1 PP) ;
@@ -445,6 +548,8 @@ SELECT So IF (0 So OR Son + Pl) ;
 
 SELECT Fins IF (0 Fins OR Fi + Pl) (1 ("fer")) ;
 
+REMOVE:empresa_n PP IF (0 ("empresa")) (-1 Prep);
+
 SELECT Pobla IF (0 Poble OR Pobla + Pl) (-1 Fem LINK NOT 0 MF) ;
 SELECT Pobla IF (0 Poble OR Pobla + Pl) (1 Fem LINK NOT 0 MF) ;
 SELECT Poble IF (0 Poble OR Pobla + Pl) (NOT -1 Fem LINK NOT 0 MF) (NOT 1 Fem LINK NOT 0 MF);
@@ -452,12 +557,46 @@ SELECT Poble IF (0 Poble OR Pobla + Pl) (-1 ("<els>") OR ("<Els>")) ;
 
 SELECT Turques IF (0 Turques OR Turquesa) (-1 ("llengua")) ;
 
+SELECT Promes IF (0 Promes OR Promes) (-1 Pos) ;
+SELECT Promesa IF (0 Promes OR Promes) (NOT -1 Pos) ;
+
+SELECT Tenir IF (0 Tens OR Tenir) (NOT -1 Det) (1 N) ;
+
+SELECT Encara IF (-1 Vbhaver) (0 Encara OR Encarar) ;
+	# hi ha encara alguns antics alumnes
+SELECT Encara IF (0 Encara OR Encarar) (1 Verb LINK 0 Pers) ;
+SELECT Encara IF (0 Encara OR Encarar) (1 Adv) (2 Verb LINK 0 Pers) ;
+SELECT Encara IF (0 Encara OR Encarar) (1 Adv) (2 Adv) (3 Verb LINK 0 Pers) ;
+	# perquè encara conserva
+	# un article que encara no exiteix
+SELECT Encara IF (0 Encara OR Encarar) (1 Pron) (2 Verb LINK 0 Pers) ;
+SELECT Encara IF (0 Encara OR Encarar) (1 Adv) (2 Pron) (3 Verb LINK 0 Pers) ;
+SELECT Encara IF (0 Encara OR Encarar) (1 Adv) (2 Adv) (3 Pron) (4 Verb LINK 0 Pers) ;
+	# encara no es coneix
+SELECT Encara IF (0 Encara OR Encarar) (1C A OR PP) ;
+SELECT Encara IF (0 Encara OR Encarar) (1 PreAdv) (2C A OR PP) ;
+	# encara molt imprecís
+SELECT Encara IF (0 Encara OR Encarar) (1 ("més") OR ("menys")) ;
+	# encara menys
+SELECT Encara IF (-2 ("més") OR ("menys")) (-1 A OR PP) (0 Encara OR Encarar) ;
+	# més pròxim encara
+
+SELECT Interj IF (0 ("adéu")) (NOT -1 Det OR A);
+
+SELECT Cog IF (-2 Ant) (-1 ("de")) (0 ("Orange")) ;
+SELECT Cog IF (-3 Ant) (-2 Num) (-1 ("de")) (0 ("Orange")) ;
+SELECT Al IF (0 ("Orange")) (1 ("S.A.") OR Top) ;
+
 SELECT A IF (-1 ("observació")) (0 ("participant")) ;
 
 SELECT MF IF (-1 Det) (0 Ponent) ;
 SELECT MF IF (-2 Det) (-1 A) (0 Ponent) ;
 SELECT MF IF (-3 Det) (-2 Adv_PreAdv) (-1 A) (0 Ponent) ;
 REMOVE MF IF (-1C Prep) (0 Ponent) ;
+
+REMOVE Ger IF (-1C Rel) (0 Ger LINK 0 Pers) ;
+REMOVE Ger IF (-2C Rel) (-1 Adv) (0 Ger LINK 0 Pers) ;
+	# que sent
 
 REMOVE N IF (-1 DetDef + Sg_strict) (0C N + Pl_strict OR Verb) ;
 REMOVE N IF (-1 DetDef + Pl_strict) (0C N + Sg_strict OR Verb) ;
@@ -498,6 +637,11 @@ REMOVE Itg IF (NOT -1 >>>) (NOT -1 Verb) (NOT -1 Adv) (NOT -1 Prep) (0 Com) ;
 REMOVE Itg IF (-1 >>>) (0 Com) (NOT 1 Verb) (NOT 1 Pron) ;
 	# not: com fas? com tu fas? com li fas?
 
+REMOVE N + Fem IF (0 ("u"i)) (NOT -1 Det + (f)) (NOT -1 ("lletra"i)); # l'u (no és nom de lletra u femení)
+
+# set per cent
+SELECT (num) IF (0 (num)) (1 ("per")) (2 ("cent"));
+
 #
 # Desambiguació "los" enc / els "pro"
 #
@@ -519,11 +663,34 @@ SELECT SUB:1 Li IF (0/* V_CD_CI) (1 Det) ;
 # Desambiguación ADJ (+PP) - NOMBRE
 #
 
+REMOVE PP IF (-1 VSer) (0 PP_Intr_Adj) ;
+  # el judici fou controvertit
+
+REMOVE Pron IF (0 ("pocs") + Masc + Pl) (1 N + Masc + Pl) ; 
+REMOVE Pron IF (0 ("pocs") + Fem + Pl) (1 N + Fem + Pl) ; 
+REMOVE Pron IF (0 ("molts") + Masc + Pl) (1 N + Masc + Pl) ; 
+REMOVE Pron IF (0 ("molts") + Fem + Pl) (1 N + Fem + Pl) ; 
+  # noltes arts japoneses
+REMOVE Pron IF (0 ("molts") + Masc + Pl) (1 A + Masc + Pl) (2 N + Masc + Pl) ; 
+REMOVE Pron IF (0 ("molts") + Fem + Pl) (1 A + Fem + Pl) (2 N + Fem + Pl) ; 
+REMOVE Pron IF (0 ("molts") + Masc + Pl) (1 Adv OR PreAdv) (2 A + Masc + Pl) (3 N + Masc + Pl) ; 
+REMOVE Pron IF (0 ("molts") + Fem + Pl) (1 Adv OR PreAdv) (2 A + Fem + Pl) (3 N + Fem + Pl) ; 
+REMOVE Pron IF (0 ("pocs") + Masc + Pl) (1 A + Masc + Pl) (2 N + Masc + Pl) ; 
+REMOVE Pron IF (0 ("pocs") + Fem + Pl) (1 A + Fem + Pl) (2 N + Fem + Pl) ; 
+REMOVE Pron IF (0 ("pocs") + Masc + Pl) (1 Adv OR PreAdv) (2 A + Masc + Pl) (3 N + Masc + Pl) ; 
+REMOVE Pron IF (0 ("pocs") + Fem + Pl) (1 Adv OR PreAdv) (2 A + Fem + Pl) (3 N + Fem + Pl) ; 
+
 # NOM / ADJ
-REMOVE A OR PP IF (-1 Prep) (0 Noun_Adj_PP LINK 0 N OR NP) (NOT 0 ("passat") OR ("passada")) (1 <<< OR Prep OR Det OR CnjSub) ;
-REMOVE A OR PP IF (-1/* Prep) (0 Noun_Adj_PP LINK 0 N OR NP) (NOT 0 ("passat") OR ("passada")) (1 <<< OR Prep OR Det OR CnjSub) ;
-REMOVE A OR PP IF (-1 Prep) (0 Noun_Adj_PP LINK 0 N OR NP) (NOT 0 ("passat") OR ("passada")) (1 CM) (2 Prep OR Det OR CnjSub OR CnjCoo) ;
-REMOVE A OR PP IF (-1/* Prep) (0 Noun_Adj_PP LINK 0 N OR NP) (NOT 0 ("passat") OR ("passada")) (1 CM) (2 Prep OR Det OR CnjSub OR CnjCoo) ;
+
+REMOVE N IF (-1 Estar LINK NOT 0 VSer) (0 Noun_Adj_PP) ;
+# estan retallades
+REMOVE P1 OR P2 OR P3 (-1C Estar) (0 N OR A OR Ger LINK 0 Pers) ;
+# està subjecte a
+
+REMOVE A OR PP IF (-1 Prep) (0 Noun_Adj_PP LINK 0 N OR NP) (NOT 0 Num OR ("passat") OR ("passada")) (1 <<< OR Prep OR Det OR CnjSub) ;
+REMOVE A OR PP IF (-1/* Prep) (0 Noun_Adj_PP LINK 0 N OR NP) (NOT 0 Num OR ("passat") OR ("passada")) (1 <<< OR Prep OR Det OR CnjSub) ;
+REMOVE A OR PP IF (-1 Prep) (0 Noun_Adj_PP LINK 0 N OR NP) (NOT 0 Num OR ("passat") OR ("passada")) (1 CM) (2 Prep OR Det OR CnjSub OR CnjCoo) ;
+REMOVE A OR PP IF (-1/* Prep) (0 Noun_Adj_PP LINK 0 N OR NP) (NOT 0 Num OR ("passat") OR ("passada")) (1 CM) (2 Prep OR Det OR CnjSub OR CnjCoo) ;
 # eren semblants al Sol, però [VERIFY: funciona amb cat-disam, però no amb cat-tagger]
 REMOVE A OR PP IF (-1 Prep) (0 Noun_Adj_PP LINK 0 N OR NP) (1 CM OR CnjCoo) (2 CnjSub) ;
 
@@ -610,10 +777,24 @@ SELECT N IF (0 Noun_Adj_PP LINK NOT 0 NP OR ("ser") OR Prep) (-1C Det) (1 CM OR 
 	# PERO: muy poco conocida.
 
 REMOVE A OR PP IF (NOT -2 Verb) (-1 Prep LINK NOT 0 Com) (0 N LINK NOT 0 NP LINK NOT 0 Copula) (NOT 0 ("passat") OR ("passada")) (1 Barrera_Final_SN LINK NOT 0 PP LINK NOT 0 N) ;
-SELECT N IF (NOT -2 Verb) (-1 Prep LINK NOT 0 Com) (0 N LINK NOT 0 NP LINK NOT 0 Copula LINK NOT 0 PreDet LINK NOT 0 Pron) (NOT 0 ("passat") OR ("passada")) (1 Barrera_Final_Estrict_SN LINK NOT 0 PP LINK NOT 0 N) ;
-SELECT N IF (NOT -2 Verb) (-1 Prep LINK NOT 0 Com) (0 N LINK NOT 0 NP LINK NOT 0 Copula) (1 CM OR CnjCoo) (2 Barrera_Final_SN LINK NOT 0 PP) ;
+SELECT N IF (NOT -2 Verb) (-1 Prep LINK NOT 0 Com) (0 N LINK NOT 0 NP LINK NOT 0 Copula LINK NOT 0 PreDet LINK NOT 0 Pron OR Num) (NOT 0 ("passat") OR ("passada")) (1 Barrera_Final_Estrict_SN LINK NOT 0 PP LINK NOT 0 N) ;
+SELECT N IF (NOT -2 Verb) (-1 Prep LINK NOT 0 Com) (0 N LINK NOT 0 NP LINK NOT 0 Copula) (NOT 0 ("gra")) (1 CM OR CnjCoo) (2 Barrera_Final_SN LINK NOT 0 PP) ;
 SELECT N IF (-2 PP) (-1 ("por")) (0 N LINK NOT 0 NP LINK NOT 0 Copula) (1 Barrera_Final_SN LINK NOT 0 PP LINK NOT 0 N) ;
 SELECT N IF (-2 PP) (-1 ("por")) (0 N LINK NOT 0 NP LINK NOT 0 Copula) (1 CM OR CnjCoo) (2 Barrera_Final_SN LINK NOT 0 PP) ;
+
+SELECT Num (0 ("nou")) (1 AdjPrefAmb + Pl) ;
+
+SELECT A (0 ("gran") + Pl) (1 N + Pl) ;
+	## grans matemàtics
+SELECT A (0 ("gran") + Pl) (1 CnjCoo) (2 ("petit") + Pl) ;
+SELECT A (0 ("gran") + Pl) (-1 CnjCoo) (-2 ("petit") + Pl) ;
+SELECT A (0 ("gran") + Pl) (1 CnjCoo) (2 Det + Pl) (3 ("petit") + Pl) ;
+SELECT A (-1 Det + Pl) (0 ("gran") + Pl) (-2 CnjCoo) (-3 ("petit") + Pl) ;
+SELECT A (0 ("gran") + Pl) (1 CnjCoo) (2 Prep) (3 Det + Pl) (4 ("petit") + Pl) ;
+SELECT A (0 ("gran") + Pl) (1 CnjCoo) (2 ("<dels>")) (3 ("petit") + Pl) ;
+SELECT A (-2 Prep) (-1 Det + Pl) (0 ("gran") + Pl) (-3 CnjCoo) (-4 ("petit") + Pl) ;
+SELECT A (-1 ("<dels>")) (0 ("gran") + Pl) (-2 CnjCoo) (-3 ("petit") + Pl) ;
+	## grans i petits, petits i grans, etc.
 
 # NP / ADJ
 
@@ -673,10 +854,10 @@ REMOVE A OR PP IF (-1 Barrera_Inicial_Estrict_SN) (0 Noun_Adj_PP + FemPl LINK 0 
 ## nous materials
 ## pels sols fets de
 
-REMOVE A OR PP IF (NOT -1 N OR A OR PP OR ("ser") OR ("estar")) (0 Noun_Adj + MascSg LINK 0 N OR NP) (NOT 0 Trencat) (NOT 0 ("nou") OR ("sol")) (1 Adj_PP + MascSg) ;
-REMOVE A OR PP IF (NOT -1 N OR A OR PP OR ("ser") OR ("estar")) (0 Noun_Adj + MascPl LINK 0 N OR NP) (NOT 0 Trencat) (NOT 0 ("nou") OR ("sol")) (1 Adj_PP + MascPl) ;
-REMOVE A OR PP IF (NOT -1 N OR A OR PP OR ("ser") OR ("estar")) (0 Noun_Adj + FemSg LINK 0 N OR NP) (NOT 0 ("nou") OR ("sol")) (1 Adj_PP + FemSg) ;
-REMOVE A OR PP IF (NOT -1 N OR A OR PP OR ("ser") OR ("estar")) (0 Noun_Adj + FemPl LINK 0 N OR NP) (NOT 0 ("nou") OR ("sol")) (1 Adj_PP + FemPl) ;
+REMOVE A OR PP IF (NOT -1 N OR A OR PP OR ("ser") OR ("estar")) (0 Noun_Adj + MascSg LINK 0 N OR NP) (NOT 0 Trencat) (NOT 0 ("nou") OR ("força") OR ("sol") OR ("bo")) (1 Adj_PP + MascSg) ;
+REMOVE A OR PP IF (NOT -1 N OR A OR PP OR ("ser") OR ("estar")) (0 Noun_Adj + MascPl LINK 0 N OR NP) (NOT 0 Trencat) (NOT 0 ("nou") OR ("força") OR ("sol") OR ("bo") OR ("gran")) (1 Adj_PP + MascPl) ;
+REMOVE A OR PP IF (NOT -1 N OR A OR PP OR ("ser") OR ("estar")) (0 Noun_Adj + FemSg LINK 0 N OR NP) (NOT 0 ("nou") OR ("força") OR ("sol") OR ("bo")) (1 Adj_PP + FemSg) ;
+REMOVE A OR PP IF (NOT -1 N OR A OR PP OR ("ser") OR ("estar")) (0 Noun_Adj + FemPl LINK 0 N OR NP) (NOT 0 ("nou") OR ("força") OR ("sol") OR ("bo") OR ("gran")) (1 Adj_PP + FemPl) ;
 
 REMOVE PP IF (NOT -1 N OR Vbhaver OR ("ser") OR ("estar")) (0 PP + MascSg LINK 0 N OR NP) (1 Adj_PP + MascSg) ;
 REMOVE PP IF (NOT -1 N OR Vbhaver OR ("ser") OR ("estar")) (0 PP + MascPl LINK 0 N OR NP) (1 Adj_PP + MascPl) ;
@@ -771,7 +952,7 @@ REMOVE A OR PP IF (-1 Barrera_Inicial_SN LINK NOT 0 N) (NOT -1 Limite_Barrera_In
 # entre occitanos, catalanes, vascos y gallegos
 # vinieron italianos, alemanes, polacos y ucranianos.
 
-SELECT N IF (-2C N) (-1 CnjCoo) (0 Noun_Adj_PP LINK NOT 0 NP) (1 Barrera_Final_Estrict_SN) ;
+SELECT N IF (-2C N) (-1 CnjCoo) (0 Noun_Adj_PP LINK NOT 0 NP) (1 Barrera_Final_Estrict_SN) (NOT 0 ("<segons>"i)) ;
 ## adquiriendo una gran reputación como poeta y crítico.
 SELECT N IF (2C N) (1 CnjCoo) (0C Noun_Adj_PP LINK NOT 0 NP) (-1 Barrera_Inicial_SN) ;
 ## "se utiliza en periódicos y libros"
@@ -867,9 +1048,12 @@ SELECT Prep IF (-1 Rel) (0 ("<durant>")) ;
 SELECT Prep IF (0 ("durant")) (1 Det) ;
 	# de Catalunya durant el segle XII
 
-SELECT Prep IF (-1 >>>) (0 ("segons")) ;
+SELECT Prep IF (-1 >>>) (0 Segons) ;
 	# segons ell
 	# segons el xic
+REMOVE Prep IF (-1 Det + Def + Pl) (0 Segons) ;
+REMOVE A OR N IF (NOT -1 Det OR A) (0 Segons) (1 Det OR Ant OR Cog) ;
+REMOVE A OR N IF (NOT -2 N) (-1C A OR PP) (0 Segons) (1 Det OR Ant OR Cog) ;
 
 SELECT N IF (-1 ("comte")) (0 ("duc")) ;
 	# comte-duc d'Olivares
@@ -1054,3 +1238,23 @@ SELECT PreAdv (-1 Ser OR Estar OR ("tornar") OR ("esdevenir")) (0 ("massa")) (1 
 SELECT Adv (-1C V) (0 ("<junts>")) ;
 	# vénen junts
 SELECT Adv (-2C V) (-1 ("tot")) (0 ("<junts>")) ;
+
+REMOVE A (-1 Det + Def) (0 A) (0 Adv) (NOT 0 Ordinal) (1 A) (NOT 1 Trencat);
+	# el més gran
+	# el primer quart
+REMOVE Adv (-1/* Det + MascSg) (0 Primer + MascSg) ;
+REMOVE Adv (-1/* Det + FemSg) (0 Primer + FemSg) ;
+REMOVE Adv (-1/* Det + MascPl) (0 Primer + MascPl) ;
+REMOVE Adv (-1/* Det + FemPl) (0 Primer + FemPl) ;
+SELECT A (-1/* Det + MascSg) (0 Ord + MascSg) (1 N + MascSg) ;
+SELECT A (-1/* Det + FemSg) (0 Ord + FemSg) (1 N + FemSg) ;
+SELECT A (-1/* Det + MascPl) (0 Ord + MascPl) (1 N + MascPl) ;
+SELECT A (-1/* Det + FemPl) (0 Ord + FemPl) (1 N + FemPl) ;
+SELECT A (-2/* Det + MascSg) (-1C N + MascSg) (0 Ord + MascSg) ;
+SELECT A (-2/* Det + FemSg) (-1C N + FemSg) (0 Ord + FemSg) ;
+SELECT A (-2/* Det + MascPl) (-1C N + MascPl) (0 Ord + MascPl) ;
+SELECT A (-2/* Det + FemPl) (-1C N + FemPl) (0 Ord + FemPl) ;
+SELECT A (-1 Prep) (0 Ord + MascSg) (1 N + MascSg) ;
+SELECT A (-1 Prep) (0 Ord + FemSg) (1 N + FemSg) ;
+SELECT A (-1 Prep) (0 Ord + MascPl) (1 N + MascPl) ;
+SELECT A (-1 Prep) (0 Ord + FemPl) (1 N + FemPl) ;

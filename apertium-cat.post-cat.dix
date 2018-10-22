@@ -269,6 +269,12 @@
       </e> 
       <e>
         <i>hui</i>
+      </e>
+      <e>
+        <i>Heidelberg</i>
+      </e> 
+      <e>
+        <i>Huelva</i>
       </e> 
       <e>
         <i>Huévar</i>
@@ -355,6 +361,12 @@
       </e>
       <e>
         <i>11<b/></i>
+      </e>
+      <e>
+        <i>1%</i>
+      </e>
+      <e>
+        <i>11%</i>
       </e>
       <e>
         <i>I<b/></i>
@@ -595,6 +607,27 @@
     </pardef>
 
     <pardef n="vocals_per_a_la">
+      
+      <e><i>hidra</i></e>     
+      <e><i>hifa</i></e>
+      <e><i>hulla</i></e>
+      <e><i>illa</i></e>
+      <e><i>Imma</i></e>
+      <e><i>inca</i></e>
+      <e><i>Ingrid</i></e>
+      <e><i>ISO</i></e>
+      <e><i>UCE</i></e>
+      <e><i>UCI</i></e>
+      <e><i>UJI</i></e>
+      <e><i>ungla</i></e>
+      <e><i>unça</i></e>
+      <e><i>urbs</i></e>
+      <e><i>urna</i></e>
+      <e><i>urpa</i></e>
+      <e><i>usa</i></e>
+      <e><i>URSS</i></e>
+      <e><i>UVI</i></e>
+
       <e>
         <i>a</i>
       </e>
@@ -745,6 +778,31 @@
     </pardef>
 
     <pardef n="consonants_per_a_la">
+      <e><i>hidrac</i></e>
+      <e><i>hidrag</i></e>
+      <e><i>hidran</i></e>
+      <e><i>hidrar</i></e>
+      <e><i>hidrat</i></e>
+      <e><i>hidraz</i></e>
+      <e><i>hifal</i></e>
+      <e><i>illad</i></e>
+      <e><i>Immac</i></e>
+      <e><i>Imman</i></e>
+      <e><i>incai</i></e>
+      <e><i>incal</i></e>
+      <e><i>incan</i></e>
+      <e><i>incap</i></e>
+      <e><i>incar</i></e>
+      <e><i>incas</i></e>
+      <e><i>incau</i></e>
+      <e><i>urpad</i></e>
+      <e><i>usad</i></e>
+      <e><i>usab</i></e>
+      <e><i>usat</i></e>
+      <e><i>usar</i></e>
+      <e><i>usav</i></e>
+      <e><i>usam</i></e>
+
       <e>
         <par n="caracter_general"/>
       </e>
@@ -776,7 +834,9 @@
         <i>h</i>
         <par n="consonantic"/>
       </e>
- 
+      <e>
+        <i>Heidelberg</i>
+      </e>
       <e>
         <i>Hollywood</i>
       </e>
@@ -2337,6 +2397,22 @@
         <par n="vocals_per_a_la"/>
       </e>
 
+      <e>
+        <p>
+          <l><b/></l>
+          <r>la<b/></r>
+        </p>
+        <par n="quotes"/>
+        <par n="consonants_per_a_la"/>
+      </e>
+      <e>
+        <p>
+          <l></l>
+          <r>la</r>
+        </p>
+        <par n="quotes"/>
+        <par n="consonants_per_a_la"/>
+      </e>
 
       <e>
         <p>
@@ -2375,6 +2451,13 @@
           <r>els</r>
         </p>
         <par n="no_apostrofa"/>
+      </e>
+      <e>
+        <p>
+          <l><b/><a/>de</l>
+          <r>els<b/></r>
+        </p>
+        <par n="de"/>
       </e>
     </pardef>
 
@@ -2853,13 +2936,26 @@
           <r>l'hi<b/></r>
         </p>
       </e>
-      <e alt="val">
+      <e alt="val_gva">
         <p>
           <l><b/><a/>el<b/></l>
           <r>li'l<b/></r>
         </p>
       </e>
-      <e alt="val">
+      <e alt="val_uni">
+        <p>
+          <l><b/><a/>el<b/></l>
+          <r>li'l<b/></r>
+        </p>
+      </e>
+      <e alt="val_gva">
+        <p>
+          <l><b/><a/>el<b/></l>
+          <r>li<b/>l'</r>
+        </p>
+        <par n="vocal_general"/>
+      </e>
+      <e alt="val_uni">
         <p>
           <l><b/><a/>el<b/></l>
           <r>li<b/>l'</r>
@@ -2872,16 +2968,16 @@
           <r>els<b/>hi<b/></r>
         </p>
       </e>
-      <e alt="val">
+      <e alt="val_gva">
         <p>
           <l><b/><a/>els<b/></l>
           <r>li'ls<b/></r>
         </p>
       </e>
-      <e>
+      <e alt="val_uni">
         <p>
           <l><b/><a/>els<b/></l>
-          <r>els<b/>hi<b/></r>
+          <r>li'ls<b/></r>
         </p>
       </e>
       <e alt="cat">
@@ -2890,7 +2986,14 @@
           <r>la<b/>hi<b/></r>
         </p>
       </e>
-      <e alt="val">
+      <e alt="val_gva">
+        <p>
+          <l><b/><a/>la<b/></l>
+          <r>li<b/>l'</r>
+        </p>
+        <par n="vocal_general"/>
+      </e>
+      <e alt="val_uni">
         <p>
           <l><b/><a/>la<b/></l>
           <r>li<b/>l'</r>
@@ -2903,7 +3006,13 @@
           <r>les<b/>hi<b/></r>
         </p>
       </e>
-      <e alt="val">
+      <e alt="val_gva">
+        <p>
+          <l><b/><a/>les<b/></l>
+          <r>li<b/>les<b/></r>
+        </p>
+      </e>
+      <e alt="val_uni">
         <p>
           <l><b/><a/>les<b/></l>
           <r>li<b/>les<b/></r>
@@ -3226,6 +3335,7 @@
         </p>
       </e>
  
+     <!-- Això cal resoldre-ho en la traducció.
      <e>
         <p>
           <l><a/>e<b/>i</l>
@@ -3257,7 +3367,7 @@
 			<l><a/>de<b/>a<b/>prop</l>
 			<r>de<b/>prop</r>
 		</p>
-      </e>
+      </e>-->
 
  </section>
 
