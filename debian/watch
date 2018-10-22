@@ -1,2 +1,4 @@
-version=3
-http://sf.net/apertium/apertium-cat-(\d\S+)\.(?:zip|tgz|tbz|txz|(?:tar\.(?:gz|bz2|xz)))
+version=4
+opts="filenamemangle=s%(?:.*?)?v?(\d[\d.]*)\.tar\.gz%apertium-cat-$1.tar.gz%" \
+    https://github.com/apertium/apertium-cat/tags \
+    (?:.*?/)?v?(\d[\d.]*)\.tar\.gz debian uupdate
